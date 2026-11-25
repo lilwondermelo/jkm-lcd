@@ -35,7 +35,7 @@
 
 ```bash
 jkmctl pair       # код на 5 минут, QR со ссылкой
-# в PWA/приложении: «привязать» → 4 цифры → сохранить токен
+# в PWA/приложении: «Сканировать QR-код» — адрес и код уже в QR
 jkmctl devices
 jkmctl require-token on && sudo systemctl restart jkm-lcd
 ```

@@ -25,7 +25,7 @@ curl http://<HOST>:8090/api/status
 Open `http://<cube-LAN-IP>:8090`. Needs Linux, Python 3.10+, and
 `pactl`/`parec` for audio features. RAPL sensors require root.
 
-Готовый APK «Кулер»: [com.arch.kuler_18.apk](apk/com.arch.kuler_18.apk) (подпись release-ключом, `versionCode 18`).
+Готовый APK «Кулер»: [com.arch.kuler_19.apk](apk/com.arch.kuler_19.apk) (подпись release-ключом, `versionCode 19`).
 
 Релиз GitHub: https://github.com/lilwondermelo/jkm-lcd/releases/tag/v3.0.1 (APK также в ассетах).
 
@@ -36,7 +36,7 @@ Open `http://<cube-LAN-IP>:8090`. Needs Linux, Python 3.10+, and
 Config: `~/.config/jkm-lcd/config.json` (600).
 
 ## Pairing
-Run `jkmctl pair` on the cube, enter the 4-digit code in the PWA/app.
+Run `jkmctl pair` on the computer and scan the QR code with the app.
 Tokens can be revoked with `jkmctl revoke <prefix>`. Enable mandatory tokens
 with `jkmctl require-token on`; <HOST> requests stay token-free.
 

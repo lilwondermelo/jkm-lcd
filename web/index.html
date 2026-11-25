@@ -9,10 +9,28 @@
   <title>JKM LCD</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" href="/icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="/style.css?v=5">
+  <link rel="stylesheet" href="/style.css?v=6">
 </head>
 <body>
-  <div class="app">
+  <div id="loginScreen" class="login" hidden>
+    <div class="login-card">
+      <div class="login-logo" aria-hidden="true">
+        <svg viewBox="0 0 32 32" width="54" height="54">
+          <rect x="2" y="4" width="28" height="24" rx="5" fill="#0b1220" stroke="#2b4a6b"/>
+          <rect x="12" y="7" width="3" height="2" rx="1" fill="#6fe3ff"/>
+          <rect x="16" y="7" width="3" height="2" rx="1" fill="#2b4a6b"/>
+          <text x="16" y="18" text-anchor="middle" font-size="9" fill="#6fe3ff" font-family="monospace">58</text>
+        </svg>
+      </div>
+      <h1>Подключение к компьютеру</h1>
+      <p class="login-sub">Отсканируйте QR-код, который показывает команда <code>jkmctl pair</code> на компьютере. Адрес и код привязки уже внутри.</p>
+      <button id="scanBtn" class="primary wide" type="button">Сканировать QR-код</button>
+      <p id="scanHint" class="hint"></p>
+      <video id="scanVideo" class="scan-video" playsinline muted hidden></video>
+    </div>
+  </div>
+
+  <div class="app" id="appRoot">
     <header class="topbar">
       <div class="brand">
         <span class="brand-icon" aria-hidden="true">
@@ -119,21 +137,16 @@
         <input id="setServer" type="url" placeholder="http://ваш-компьютер:8090" autocomplete="off">
       </label>
 
-      <label class="field">
-        <span>Код привязки</span>
-        <input id="setCode" type="number" inputmode="numeric" placeholder="4 цифры" autocomplete="off">
-      </label>
-
       <div class="modal-actions">
-        <button id="saveServer" class="primary" type="button">Сохранить адрес</button>
-        <button id="doPair" type="button">Привязать</button>
-        <button id="doReload" type="button">Обновить пульт</button>
+        <button id="doUnpair" type="button">Отвязать</button>
+        <button id="doReload" class="primary" type="button">Обновить пульт</button>
       </div>
-      <p class="modal-note">Код печатает команда <code>jkmctl pair</code> на компьютере.</p>
+      <p class="modal-note">После отвязки пульт снова попросит отсканировать QR-код.</p>
     </div>
   </div>
 
   <p id="toast" class="toast" role="status" aria-live="polite"></p>
-  <script src="/app.js?v=5"></script>
+  <script src="/app.js?v=6"></script>
+  <script src="/vendor/jsQR.js"></script>
 </body>
 </html>

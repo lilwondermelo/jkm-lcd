@@ -9,6 +9,7 @@ import posixpath
 import sys
 import threading
 import time
+import socket
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 from urllib.parse import urlparse
@@ -20,6 +21,18 @@ except ImportError:  # running as a script
 
 ROOT = Path(__file__).resolve().parent.parent
 WEB = ROOT / "web"
+def lan_ip() -> str:
+    """LAN-адрес куба для QR: тот, по которому до него дотянется телефон."""
+    try:
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect(("8.8.8.8", 80))
+        ip = s.getsockname()[0]
+        s.close()
+        return ip
+    except OSError:
+        return "127.0.0.1"
+
+
 CONF = pairing.load_config()
 HOST = os.environ.get("JKM_HOST", CONF.get("host", "0.0.0.0"))
 PORT = int(os.environ.get("JKM_PORT", CONF.get("port", 8090)))
@@ -272,7 +285,8 @@ class Handler(BaseHTTPRequestHandler):
             return self._json(401, {"error": "not paired"})
         if path == "/api/pair/code":
             info = pairing.new_code()
-            info["url"] = f"http://{self.headers.get('Host', '192.168.31.100:8090')}/"
+            host = os.environ.get("JKM_PUBLIC_HOST") or f"{lan_ip()}:{PORT}"
+            info["url"] = f"http://{host}/pair?code={info['code']}"
             return self._json(200, info)
         if path == "/api/pair/devices":
             return self._json(200, {"items": pairing.devices()})
@@ -389,7 +403,7 @@ class Handler(BaseHTTPRequestHandler):
         return self._json(404, {"error": "not found"})
 
     def _static(self, path: str):
-        if path in ("", "/"):
+        if path in ("", "/", "/pair"):
             path = "/index.html"
         rel = posixpath.normpath(path).lstrip("/")
         target = (WEB / rel).resolve()

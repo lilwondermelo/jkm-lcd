@@ -19,6 +19,8 @@ let server = {
 };
 let busy = false;
 let toastTimer = 0;
+let scanStream = null;
+let scanLoop = 0;
 
 function setText(id, text) {
   const el = $(id);
@@ -34,13 +36,15 @@ function toast(text, bad = false) {
 }
 
 function baseUrl() {
-  const saved = localStorage.getItem("jkm-server");
-  return saved ? saved.replace(/\/+$/, "") : "";
+  return localStorage.getItem("jkm-server") || "";
+}
+
+function token() {
+  return localStorage.getItem("jkm-token") || "";
 }
 
 async function api(path, body) {
-  const token = localStorage.getItem("jkm-token") || "";
-  const headers = { "Content-Type": "application/json", "X-JKM-Token": token };
+  const headers = { "Content-Type": "application/json", "X-JKM-Token": token() };
   const opts = body
     ? { method: "POST", headers, body: JSON.stringify(body) }
     : { cache: "no-store", headers };
@@ -145,7 +149,6 @@ function paintPreview(nowSec) {
     } else if (anim === "volume") load = snd.volume || 0;
     else if (anim === "eq") load = snd.level || 0;
     else if (anim === "breathe") {
-      // На реальном LCD дыхание мигает только нижней шкалой.
       load = breatheOn(nowSec, params.breathe || {}) ? 100 : 0;
     } else if (anim === "none" && mode !== "clock") load = 0;
   }
@@ -204,10 +207,7 @@ function applyStatus(data) {
   const online = !!server.sensors.connected;
   statusEl.classList.toggle("online", online);
   statusEl.classList.toggle("offline", !online);
-  const paired = !!localStorage.getItem("jkm-token");
-  setText("statusText", online
-    ? `на связи${paired ? "" : " · гость"}`
-    : "нет связи");
+  setText("statusText", online ? "на связи" : "нет связи");
 
   const on = server.display_on !== false;
   const btn = $("powerBtn");
@@ -217,6 +217,7 @@ function applyStatus(data) {
 }
 
 async function refresh() {
+  if (!token()) { showLogin(); return; }
   try {
     applyStatus(await api("/api/status"));
   } catch (e) {
@@ -224,8 +225,7 @@ async function refresh() {
     statusEl.classList.add("offline");
     if (e.status === 401) {
       setText("statusText", "нужна привязка");
-      document.body.classList.add("unpaired");
-      if ($("settingsModal").hidden) $("settingsModal").hidden = false;
+      showLogin();
     } else {
       setText("statusText", "сервер недоступен");
     }
@@ -264,41 +264,111 @@ $("powerBtn").addEventListener("click", () => {
   command("/api/display", { on: next }, next ? "экран включён" : "экран выключен");
 });
 
+/* ---------- вход по QR ---------- */
+
+function showLogin() {
+  document.body.classList.add("unpaired");
+  $("loginScreen").hidden = false;
+  stopScan();
+}
+function hideLogin() {
+  document.body.classList.remove("unpaired");
+  $("loginScreen").hidden = true;
+}
+
+async function pairWith(url, code) {
+  const origin = new URL(url).origin;
+  const r = await fetch(origin + "/api/pair", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ code, label: "PWA" }),
+  });
+  const data = await r.json();
+  if (!r.ok) throw new Error(data.error || r.status);
+  localStorage.setItem("jkm-server", origin);
+  localStorage.setItem("jkm-token", data.token);
+  hideLogin();
+  refresh();
+}
+
+async function handleQrText(text) {
+  try {
+    const u = new URL(text);
+    const code = u.searchParams.get("code") || "";
+    if (!/^\d{4}$/.test(code)) throw new Error("в QR нет кода привязки");
+    setText("scanHint", "привязываю…");
+    await pairWith(u.toString(), code);
+    toast("компьютер привязан");
+  } catch (e) {
+    setText("scanHint", `не получилось: ${e.message}`);
+  }
+}
+
+async function startScan() {
+  const video = $("scanVideo");
+  setText("scanHint", "");
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    setText("scanHint", "камера недоступна — открой ссылку из QR на телефоне");
+    return;
+  }
+  try {
+    scanStream = await navigator.mediaDevices.getUserMedia({
+      video: { facingMode: "environment" }, audio: false,
+    });
+  } catch (e) {
+    setText("scanHint", "нет доступа к камере: " + e.message);
+    return;
+  }
+  video.srcObject = scanStream;
+  video.hidden = false;
+  await video.play();
+  const canvas = document.createElement("canvas");
+  const ctx = canvas.getContext("2d", { willReadFrequently: true });
+  const tick = () => {
+    if (!scanStream) return;
+    if (video.videoWidth) {
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      ctx.drawImage(video, 0, 0);
+      const img = ctx.getImageData(0, 0, canvas.width, canvas.height);
+      const found = window.jsQR ? window.jsQR(img.data, img.width, img.height) : null;
+      if (found && found.data) {
+        stopScan();
+        handleQrText(found.data);
+        return;
+      }
+    }
+    scanLoop = requestAnimationFrame(tick);
+  };
+  tick();
+}
+
+function stopScan() {
+  cancelAnimationFrame(scanLoop);
+  if (scanStream) {
+    scanStream.getTracks().forEach((t) => t.stop());
+    scanStream = null;
+  }
+  const video = $("scanVideo");
+  if (video) { video.hidden = true; video.srcObject = null; }
+}
+
+$("scanBtn").addEventListener("click", startScan);
+
 /* ---------- настройки ---------- */
 
 const modal = $("settingsModal");
 $("settingsBtn").addEventListener("click", () => {
-  $("setServer").value = localStorage.getItem("jkm-server") || location.origin;
+  $("setServer").value = baseUrl() || location.origin;
   modal.hidden = false;
 });
 $("closeSettings").addEventListener("click", () => { modal.hidden = true; });
 modal.addEventListener("click", (e) => { if (e.target === modal) modal.hidden = true; });
 
-$("saveServer").addEventListener("click", () => {
-  const url = $("setServer").value.trim().replace(/\/+$/, "");
-  if (!url.startsWith("http")) { toast("нужен адрес вида http://host:8090", true); return; }
-  localStorage.setItem("jkm-server", url);
-  toast("адрес сохранён");
-  hardReload();
-});
-
-$("doPair").addEventListener("click", async () => {
-  const code = $("setCode").value.trim();
-  if (code.length !== 4) { toast("введи 4 цифры с компьютера", true); return; }
-  try {
-    const r = await fetch(baseUrl() + "/api/pair", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ code, label: "PWA" }),
-    });
-    const data = await r.json();
-    if (!r.ok) throw new Error(data.error || r.status);
-    localStorage.setItem("jkm-token", data.token);
-    toast("компьютер привязан");
-    modal.hidden = true;
-    document.body.classList.remove("unpaired");
-    refresh();
-  } catch (e) { toast(`не привязалось: ${e.message}`, true); }
+$("doUnpair").addEventListener("click", () => {
+  localStorage.removeItem("jkm-token");
+  modal.hidden = true;
+  showLogin();
 });
 
 async function hardReload() {
@@ -318,7 +388,23 @@ $("doReload").addEventListener("click", hardReload);
 
 /* ---------- запуск ---------- */
 
-refresh();
+(function boot() {
+  const params = new URLSearchParams(location.search);
+  const code = params.get("code");
+  if (token()) {
+    hideLogin();
+    refresh();
+  } else if (code) {
+    pairWith(location.origin, code).catch((e) => {
+      setText("scanHint", "не привязалось: " + e.message);
+      showLogin();
+    });
+    history.replaceState(null, "", "/");
+  } else {
+    showLogin();
+  }
+})();
+
 setInterval(refresh, 1500);
 (function loop() {
   paintPreview(performance.now() / 1000);
