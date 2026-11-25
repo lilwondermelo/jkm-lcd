@@ -39,6 +39,8 @@ curl http://localhost:8090/api/status
 
 Готовый APK «Кулер»: [com.arch.kuler_16.apk](apk/com.arch.kuler_16.apk) (подпись release-ключом, `versionCode 16`).
 
+Релиз GitHub: https://github.com/lilwondermelo/jkm-lcd/releases/tag/v3.0.1 (APK также в ассетах).
+
 ## CLI
 
 ```bash

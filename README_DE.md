@@ -27,6 +27,8 @@ Danach `http://<IP-des-Cube>:8090` öffnen. Linux, Python 3.10+ und
 
 Готовый APK «Кулер»: [com.arch.kuler_16.apk](apk/com.arch.kuler_16.apk) (подпись release-ключом, `versionCode 16`).
 
+Релиз GitHub: https://github.com/lilwondermelo/jkm-lcd/releases/tag/v3.0.1 (APK также в ассетах).
+
 ## CLI
 `jkmctl status | mode CPU|GPU|clock|volume | anim wave|cpu|gpu|volume|eq | on | off | pair | devices | doctor`
 Konfiguration: `~/.config/jkm-lcd/config.json` (600).
