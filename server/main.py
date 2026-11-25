@@ -25,7 +25,7 @@ HOST = os.environ.get("JKM_HOST", CONF.get("host", "0.0.0.0"))
 PORT = int(os.environ.get("JKM_PORT", CONF.get("port", 8090)))
 REQUIRE_TOKEN = (os.environ.get("JKM_REQUIRE_TOKEN", "").lower() in ("1", "true", "yes")
                  or bool(CONF.get("require_token")))
-VERSION = "3.0"
+VERSION = "3.0.1"
 STATE_FILE = Path(os.environ.get("JKM_STATE_FILE", "/var/lib/jkm-lcd/state.json"))
 
 
@@ -220,7 +220,7 @@ def display_loop():
 
 
 class Handler(BaseHTTPRequestHandler):
-    server_version = "jkm-lcd/3.0"
+    server_version = "jkm-lcd/3.0.1"
 
     def log_message(self, fmt, *args):
         # quieter logs
@@ -261,6 +261,12 @@ class Handler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         path = urlparse(self.path).path
+        if path == "/api/health":
+            with STATE.lock:
+                return self._json(200, {
+                    "ok": True, "service": "jkm-lcd", "version": VERSION,
+                    "connected": STATE.latest.get("connected", False),
+                })
         if path.startswith("/api/") and path not in (
                 "/api/pair/code", "/api/pair/devices") and not self._authorized():
             return self._json(401, {"error": "not paired"})
