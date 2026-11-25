@@ -2,28 +2,28 @@ const $ = (id) => document.getElementById(id);
 const statusEl = $("status");
 const statusText = $("statusText");
 const toastEl = $("toast");
-
 const SEGMENTS = 10;
-
-const MODE_UNIT = { temp: "°C", gpu: "°C", clock: "", volume: "" };
-const MODE_LABEL = { temp: "CPU", gpu: "GPU", clock: "часы", volume: "громкость" };
 const CLOCK_FRAME_SECONDS = 2.0;
+
+const MODE_LABEL = { temp: "CPU", gpu: "GPU", clock: "часы", volume: "громкость" };
+const MODE_UNIT = { temp: "°C", gpu: "°C", clock: "", volume: "" };
 const ANIM_LABEL = {
   wave: "волна", pingpong: "пинг-понг", breathe: "дыхание",
-  cputemp: "шкала CPU", gputemp: "шкала GPU",
-  volume: "шкала громкости", eq: "эквалайзер", none: "пусто",
+  cputemp: "шкала CPU", gputemp: "шкала GPU", volume: "шкала громкости",
+  eq: "эквалайзер", none: "пусто",
 };
 
 let server = {
-  version: "?",
-  mode: "temp",
-  animation: "none",
-  display_on: true,
-  animation_params: {},
-  sensors: {},
+  version: "?", mode: "temp", animation: "wave", display_on: true,
+  animation_params: {}, sensors: {}, sound: {},
 };
 let busy = false;
 let toastTimer = 0;
+
+function setText(id, text) {
+  const el = $(id);
+  if (el) el.textContent = text;
+}
 
 function toast(text, bad = false) {
   toastEl.textContent = text;
@@ -33,13 +33,18 @@ function toast(text, bad = false) {
   toastTimer = setTimeout(() => toastEl.classList.remove("show"), 2200);
 }
 
+function baseUrl() {
+  const saved = localStorage.getItem("jkm-server");
+  return saved ? saved.replace(/\/+$/, "") : "";
+}
+
 async function api(path, body) {
   const token = localStorage.getItem("jkm-token") || "";
   const headers = { "Content-Type": "application/json", "X-JKM-Token": token };
   const opts = body
     ? { method: "POST", headers, body: JSON.stringify(body) }
     : { cache: "no-store", headers };
-  const r = await fetch(path, opts);
+  const r = await fetch(baseUrl() + path, opts);
   let data = null;
   try { data = await r.json(); } catch (e) { data = null; }
   if (!r.ok) {
@@ -55,11 +60,6 @@ function vibrate(ms = 12) {
   if (navigator.vibrate) navigator.vibrate(ms);
 }
 
-function setText(id, text) {
-  const el = $(id);
-  if (el) el.textContent = text;
-}
-
 function fmt(v, digits = 0) {
   if (v === null || v === undefined || Number.isNaN(Number(v))) return "—";
   const n = Number(v);
@@ -72,9 +72,16 @@ function setActive(attr, value) {
   });
 }
 
-/* ---------- превью панели: те же тайминги, что в server/animations.py ---------- */
+/* ---------- превью ---------- */
 
-function clampPct(x) { return Math.max(0, Math.min(100, Math.round(x))); }
+const clampPct = (x) => Math.max(0, Math.min(100, Math.round(x)));
+
+function tempBar(temp, p) {
+  if (temp === null || temp === undefined) return 0;
+  const lo = p.min_c || 20;
+  const hi = p.max_c || 90;
+  return clampPct((temp - lo) / (hi - lo) * 100);
+}
 
 function waveLoad(t, p) {
   const steps = p.steps || SEGMENTS;
@@ -116,23 +123,14 @@ function breatheOn(t, p) {
   return (t % period) < on;
 }
 
-function tempBar(temp, p) {
-  if (temp === null || temp === undefined) return 0;
-  const lo = p.min_c || 20;
-  const hi = p.max_c || 90;
-  return clampPct((temp - lo) / (hi - lo) * 100);
-}
-
 function paintPreview(nowSec) {
   const s = server.sensors || {};
+  const snd = server.sound || {};
   const mode = server.mode;
   const anim = server.animation;
   const params = server.animation_params || {};
-  const snd = server.sound || {};
-
   const screenOff = !server.display_on;
-  let load = clampPct(s.load || 0);
-  let blackout = false;
+  let load = 0;
 
   if (!screenOff) {
     if (anim === "wave") load = waveLoad(nowSec, params.wave || {});
@@ -144,87 +142,78 @@ function paintPreview(nowSec) {
       const alert = p.alert_c || 80;
       const period = p.alert_period || 1.6;
       if (value >= alert && (nowSec % period) >= period / 2) load = 0;
-    }
-    else if (anim === "volume") load = snd.volume || 0;
+    } else if (anim === "volume") load = snd.volume || 0;
     else if (anim === "eq") load = snd.level || 0;
-    else if (anim === "none" && mode !== "clock") {
-      load = 0;
-    } else if (anim === "breathe") {
+    else if (anim === "breathe") {
       // На реальном LCD дыхание мигает только нижней шкалой.
       load = breatheOn(nowSec, params.breathe || {}) ? 100 : 0;
-    }
-  } else {
-    blackout = true;
-    load = 0;
+    } else if (anim === "none" && mode !== "clock") load = 0;
   }
 
-  let value = mode === "gpu" ? s.gpu : s.temp;
-  if (mode === "volume") {
-    value = snd.volume;  // шкала живёт своей жизнью, здесь просто цифра
-  }
+  let value = s.temp;
+  let unit = "°C";
+  let tab = "center";
+  if (mode === "gpu") { value = s.gpu; }
   if (mode === "clock") {
     const d = new Date();
-    value = (nowSec % (2 * CLOCK_FRAME_SECONDS)) < CLOCK_FRAME_SECONDS
-      ? d.getHours() : d.getMinutes();
+    const hoursPhase = (nowSec % (2 * CLOCK_FRAME_SECONDS)) < CLOCK_FRAME_SECONDS;
+    value = hoursPhase ? d.getHours() : d.getMinutes();
+    unit = "";
+    tab = hoursPhase ? "left" : "right";
     if (anim === "none") load = Math.round((d.getMinutes() / 59) * 100);
   }
-  setText("p-big", blackout ? "" : fmt(value));
-  setText("p-big-unit", blackout ? "" : (MODE_UNIT[mode] || ""));
-  setText("p-mode", MODE_LABEL[mode] || mode);
-  setText("p-anim", anim === "eq"
-    ? `эквалайзер ${(snd.level || 0)}%`
-    : (ANIM_LABEL[anim] || anim));
+  if (mode === "volume") { value = snd.volume; unit = ""; }
 
-  let tabs = server.tab || "center";
-  if (mode === "clock") {
-    tabs = (nowSec % (2 * CLOCK_FRAME_SECONDS)) < CLOCK_FRAME_SECONDS ? "left" : "right";
-    setText("p-mode", tabs === "left" ? "часы" : "минуты");
-  }
-  const tabIndex = tabs === "left" ? 0 : tabs === "center" ? 1 : 2;
-  $("p-tabs").querySelectorAll("span").forEach((t, i) => {
-    t.classList.toggle("on", !blackout && i === tabIndex);
+  setText("p-big", screenOff ? "" : fmt(value));
+  setText("p-big-unit", screenOff ? "" : unit);
+  setText("p-mode", mode === "clock" ? (tab === "left" ? "часы" : "минуты") : MODE_LABEL[mode]);
+  setText("p-anim", anim === "eq"
+    ? `эквалайзер ${snd.level || 0}%`
+    : ANIM_LABEL[anim]);
+
+  const tabIndex = tab === "left" ? 0 : tab === "right" ? 2 : 1;
+  $("p-tabs").querySelectorAll("span").forEach((el, i) => {
+    el.classList.toggle("on", !screenOff && i === tabIndex);
   });
 
   const lit = Math.round(load / 100 * SEGMENTS);
   $("p-bar").querySelectorAll("span").forEach((seg, i) => {
-    seg.classList.toggle("on", !blackout && i < lit);
+    seg.classList.toggle("on", !screenOff && i < lit);
   });
   $("device").classList.toggle("dark", screenOff);
-  $("previewState").textContent = screenOff ? "экран выключен"
-    : (s.connected ? "на связи" : "нет связи с кулером");
+  setText("previewState", screenOff ? "экран выключен" : (s.connected ? "на связи" : "нет связи"));
   $("previewState").classList.toggle("bad", !s.connected);
 }
 
 /* ---------- состояние ---------- */
 
-function applyStatus(s) {
-  if (!s) return;
-  server = { ...server, ...s, sensors: s.sensors || {} };
+function applyStatus(data) {
+  if (!data) return;
+  server = { ...server, ...data, sensors: data.sensors || {}, sound: data.sound || {} };
+  document.body.classList.remove("unpaired");
+
   setText("v-temp", fmt(server.sensors.temp));
+  setText("v-gpu", fmt(server.sensors.gpu));
   setText("v-power", fmt(server.sensors.power, 1));
   setText("v-load", fmt(server.sensors.load));
-  setText("v-gpu", fmt(server.sensors.gpu));
-  setText("v-clock", fmt(server.sensors.clock));
   setText("ver", `v${server.version}`);
 
   setActive("data-mode", server.mode);
   setActive("data-anim", server.animation);
 
-  document.body.classList.remove("unpaired");
   const online = !!server.sensors.connected;
   statusEl.classList.toggle("online", online);
   statusEl.classList.toggle("offline", !online);
-  statusText.textContent = online
-    ? `online · ${server.sensors.port || "ttyACM"}`
-    : "нет связи с кулером";
+  const paired = !!localStorage.getItem("jkm-token");
+  setText("statusText", online
+    ? `на связи${paired ? "" : " · гость"}`
+    : "нет связи");
 
   const on = server.display_on !== false;
   const btn = $("powerBtn");
-  btn.textContent = on ? "Выключить экран" : "Включить экран";
+  btn.textContent = on ? "Выключить" : "Включить";
   btn.classList.toggle("off", !on);
-  $("powerHint").textContent = on
-    ? "Включён — идут кадры с датчиками."
-    : "Выключен — кадры не отправляются, экран гаснет.";
+  setText("powerHint", on ? "включён — идут кадры" : "выключен — кадры не идут");
 }
 
 async function refresh() {
@@ -234,12 +223,11 @@ async function refresh() {
     statusEl.classList.remove("online");
     statusEl.classList.add("offline");
     if (e.status === 401) {
-      connected = false;
-      statusText.textContent = "нужна привязка";
+      setText("statusText", "нужна привязка");
       document.body.classList.add("unpaired");
-      if (!modal.hidden) modal.hidden = false;
+      if ($("settingsModal").hidden) $("settingsModal").hidden = false;
     } else {
-      statusText.textContent = "сервер недоступен";
+      setText("statusText", "сервер недоступен");
     }
   }
 }
@@ -268,27 +256,23 @@ async function command(path, body, okText) {
 document.querySelectorAll("[data-mode]").forEach((b) => {
   b.addEventListener("click", () => command("/api/mode", { mode: b.getAttribute("data-mode") }));
 });
-
 document.querySelectorAll("[data-anim]").forEach((b) => {
   b.addEventListener("click", () => command("/api/animation", { animation: b.getAttribute("data-anim") }));
 });
-
 $("powerBtn").addEventListener("click", () => {
   const next = !(server.display_on !== false);
   command("/api/display", { on: next }, next ? "экран включён" : "экран выключен");
 });
 
+/* ---------- настройки ---------- */
+
 const modal = $("settingsModal");
 $("settingsBtn").addEventListener("click", () => {
-  $("setServer").value = serverBase();
+  $("setServer").value = localStorage.getItem("jkm-server") || location.origin;
   modal.hidden = false;
 });
 $("closeSettings").addEventListener("click", () => { modal.hidden = true; });
 modal.addEventListener("click", (e) => { if (e.target === modal) modal.hidden = true; });
-
-function serverBase() {
-  return location.origin.startsWith("http") ? location.origin : "http://192.168.31.100:8090";
-}
 
 $("saveServer").addEventListener("click", () => {
   const url = $("setServer").value.trim().replace(/\/+$/, "");
@@ -302,7 +286,7 @@ $("doPair").addEventListener("click", async () => {
   const code = $("setCode").value.trim();
   if (code.length !== 4) { toast("введи 4 цифры с компьютера", true); return; }
   try {
-    const r = await fetch("/api/pair", {
+    const r = await fetch(baseUrl() + "/api/pair", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ code, label: "PWA" }),
@@ -336,14 +320,10 @@ $("doReload").addEventListener("click", hardReload);
 
 refresh();
 setInterval(refresh, 1500);
-
 (function loop() {
   paintPreview(performance.now() / 1000);
   requestAnimationFrame(loop);
 })();
-
 if ("serviceWorker" in navigator) {
-  window.addEventListener("load", () => {
-    navigator.serviceWorker.register("/sw.js").catch(() => {});
-  });
+  window.addEventListener("load", () => navigator.serviceWorker.register("/sw.js").catch(() => {}));
 }

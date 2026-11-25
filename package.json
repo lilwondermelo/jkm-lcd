@@ -1,0 +1,33 @@
+{
+  "name": "@lilwondermelo/jkm-lcd",
+  "version": "3.1.0",
+  "description": "Пульт JKM LCD: сервер (Python stdlib), PWA и CLI jkmctl",
+  "bin": {
+    "jkmctl": "bin/jkmctl.js"
+  },
+  "files": [
+    "bin",
+    "server",
+    "web",
+    "docs",
+    "systemd",
+    "apk",
+    "README.md",
+    "LICENSE",
+    "icon.svg"
+  ],
+  "engines": {
+    "node": ">=18"
+  },
+  "license": "UNLICENSED",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lilwondermelo/jkm-lcd.git"
+  },
+  "keywords": [
+    "jkm",
+    "lcd",
+    "cooler",
+    "cli"
+  ]
+}

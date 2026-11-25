@@ -3,124 +3,137 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-  <meta name="theme-color" content="#0a0d16">
+  <meta name="theme-color" content="#080b14">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <title>JKM LCD</title>
   <link rel="manifest" href="/manifest.webmanifest">
   <link rel="icon" href="/icon.svg" type="image/svg+xml">
-  <link rel="stylesheet" href="/style.css?v=4">
+  <link rel="stylesheet" href="/style.css?v=5">
 </head>
 <body>
-  <header>
-    <div class="brand">
-      <span class="logo">▣</span>
-      <div>
-        <h1>JKM LCD</h1>
-        <p class="sub">экран кулера · пульт</p>
-      </div>
-    </div>
-    <div class="header-right">
-      <div id="status" class="status"><span class="dot"></span><span id="statusText">подключение…</span></div>
-      <button id="settingsBtn" class="plain-icon" type="button" title="Настройки" aria-label="Настройки">
-        <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true">
-          <path fill="currentColor" d="M19.4 13a7.8 7.8 0 0 0 0-2l2-1.6-2-3.4-2.4 1a7.6 7.6 0 0 0-1.7-1L15 3.4h-4L10.7 6a7.6 7.6 0 0 0-1.7 1l-2.4-1-2 3.4L6.6 11a7.8 7.8 0 0 0 0 2l-2 1.6 2 3.4 2.4-1a7.6 7.6 0 0 0 1.7 1l.3 2.6h4l.3-2.6a7.6 7.6 0 0 0 1.7-1l2.4 1 2-3.4-2-1.6ZM13 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7Z"/>
-        </svg>
-      </button>
-    </div>
-  </header>
-
-  <main>
-    <section class="panel preview-panel">
-      <div class="preview-head">
-        <h2>Так это выглядит на экране</h2>
-        <span id="previewState" class="chip">—</span>
-      </div>
-      <div class="device" id="device">
-        <div class="tabs" id="p-tabs"><span></span><span></span><span></span></div>
-        <div class="device-digits">
-          <b id="p-big">—</b><span id="p-big-unit">°C</span>
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-icon" aria-hidden="true">
+          <svg viewBox="0 0 32 32" width="28" height="28">
+            <rect x="2" y="4" width="28" height="24" rx="5" fill="#0b1220" stroke="#2b4a6b"/>
+            <rect x="12" y="7" width="3" height="2" rx="1" fill="#6fe3ff"/>
+            <rect x="16" y="7" width="3" height="2" rx="1" fill="#2b4a6b"/>
+            <text x="16" y="18" text-anchor="middle" font-size="9" fill="#6fe3ff" font-family="monospace">58</text>
+            <g fill="#2b4a6b">
+              <rect x="5" y="21" width="2" height="3" rx="1"/><rect x="8" y="21" width="2" height="3" rx="1"/>
+              <rect x="11" y="21" width="2" height="3" rx="1"/><rect x="14" y="21" width="2" height="3" rx="1"/>
+              <rect x="17" y="21" width="2" height="3" rx="1"/><rect x="20" y="21" width="2" height="3" rx="1"/>
+              <rect x="23" y="21" width="2" height="3" rx="1"/><rect x="26" y="21" width="2" height="3" rx="1"/>
+            </g>
+          </svg>
+        </span>
+        <div class="brand-text">
+          <h1>JKM LCD</h1>
+          <p>пульт экрана</p>
         </div>
-        <div class="bar" id="p-bar" aria-hidden="true">
-          <span></span><span></span><span></span><span></span><span></span>
-          <span></span><span></span><span></span><span></span><span></span>
+      </div>
+      <div class="topbar-actions">
+        <div id="status" class="status"><span class="dot"></span><span id="statusText">подключение…</span></div>
+        <button id="settingsBtn" class="plain-icon" type="button" aria-label="Настройки" title="Настройки">
+          <svg viewBox="0 0 24 24" width="21" height="21" aria-hidden="true">
+            <path fill="currentColor" d="M19.4 13a7.8 7.8 0 0 0 0-2l2-1.6-2-3.4-2.4 1a7.6 7.6 0 0 0-1.7-1L15 3.4h-4L10.7 6a7.6 7.6 0 0 0-1.7 1l-2.4-1-2 3.4L6.6 11a7.8 7.8 0 0 0 0 2l-2 1.6 2 3.4 2.4-1a7.6 7.6 0 0 0 1.7 1l.3 2.6h4l.3-2.6a7.6 7.6 0 0 0 1.7-1l2.4 1 2-3.4-2-1.6ZM13 15.5a3.5 3.5 0 1 1 0-7 3.5 3.5 0 0 1 0 7Z"/>
+          </svg>
+        </button>
+      </div>
+    </header>
+
+    <main>
+      <section class="screen-card">
+        <div class="screen-head">
+          <span class="eyebrow">как на экране</span>
+          <span id="previewState" class="chip">—</span>
         </div>
-        <div class="device-foot"><span id="p-mode">температура</span><span id="p-anim">волна</span></div>
-      </div>
-    </section>
+        <div class="device" id="device">
+          <div class="tabs" id="p-tabs"><span></span><span></span><span></span></div>
+          <div class="digits"><b id="p-big">—</b><span id="p-big-unit">°C</span></div>
+          <div class="bar" id="p-bar" aria-hidden="true">
+            <span></span><span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span><span></span>
+          </div>
+          <div class="screen-foot"><span id="p-mode">CPU</span><span id="p-anim">волна</span></div>
+        </div>
+      </section>
 
-    <section class="panel">
-      <h2>Что показывает большое поле</h2>
-      <div class="grid modes" id="modes">
-        <button data-mode="temp" type="button">CPU<span>температура</span></button>
-        <button data-mode="gpu" type="button">GPU<span>температура</span></button>
-        <button data-mode="clock" type="button">Часы<span>ЧЧ и ММ</span></button>
-        <button data-mode="volume" type="button">Громкость<span>уровень цифрой</span></button>
-      </div>
-    </section>
+      <section class="block">
+        <div class="block-head"><h2>Цифры</h2><span class="hint">большое поле</span></div>
+        <div class="modes" id="modes">
+          <button data-mode="temp" type="button"><b>CPU</b><span>температура</span></button>
+          <button data-mode="gpu" type="button"><b>GPU</b><span>температура</span></button>
+          <button data-mode="clock" type="button"><b>Часы</b><span>ЧЧ и ММ</span></button>
+          <button data-mode="volume" type="button"><b>Громкость</b><span>уровень</span></button>
+        </div>
+      </section>
 
-    <section class="panel">
-      <h2>Анимация шкалы</h2>
-      <div class="grid three" id="anims">
-        <button data-anim="wave" type="button">Волна<span>змейка слева → вправо</span></button>
-        <button data-anim="pingpong" type="button">Пинг-понг<span>заполнение → гашение справа налево</span></button>
-        <button data-anim="breathe" type="button">Дыхание<span>вся панель пульсирует</span></button>
-        <button data-anim="cputemp" type="button">Шкала CPU<span>20–90 °C, мигает с 80 °C</span></button>
-        <button data-anim="gputemp" type="button">Шкала GPU<span>20–90 °C, мигает с 80 °C</span></button>
-        <button data-anim="volume" type="button">Шкала громкости<span>0–100 %, не зависит от цифр</span></button>
-        <button data-anim="eq" type="button">Эквалайзер<span>быстрый отклик на каждый удар</span></button>
-        <button data-anim="none" type="button">Пусто<span>нижний индикатор погашен</span></button>
-      </div>
-    </section>
+      <section class="block">
+        <div class="block-head"><h2>Нижняя шкала</h2><span class="hint">независимо от цифр</span></div>
+        <div class="chips" id="anims">
+          <button data-anim="wave" type="button">Волна</button>
+          <button data-anim="pingpong" type="button">Пинг-понг</button>
+          <button data-anim="breathe" type="button">Дыхание</button>
+          <button data-anim="cputemp" type="button">CPU °C</button>
+          <button data-anim="gputemp" type="button">GPU °C</button>
+          <button data-anim="volume" type="button">Громкость</button>
+          <button data-anim="eq" type="button">Эквалайзер</button>
+          <button data-anim="none" type="button">Пусто</button>
+        </div>
+      </section>
 
-    <section class="panel">
-      <div class="row">
+      <section class="block power-block">
         <div>
           <h2>Экран</h2>
-          <p class="hint" id="powerHint">Включён — идут кадры.</p>
+          <p class="hint" id="powerHint">включён — идут кадры</p>
         </div>
-        <button id="powerBtn" class="power" type="button">Выключить экран</button>
-      </div>
-    </section>
+        <button id="powerBtn" class="power" type="button">Выключить</button>
+      </section>
 
-    <section class="tiles">
-      <div class="tile"><span class="label">CPU</span><b id="v-temp">—</b><span class="unit">°C</span></div>
-      <div class="tile"><span class="label">POWER</span><b id="v-power">—</b><span class="unit">W</span></div>
-      <div class="tile"><span class="label">LOAD</span><b id="v-load">—</b><span class="unit">%</span></div>
-      <div class="tile"><span class="label">GPU</span><b id="v-gpu">—</b><span class="unit">°C</span></div>
-      <div class="tile"><span class="label">CLOCK</span><b id="v-clock">—</b><span class="unit">MHz</span></div>
-    </section>
+      <section class="sensors">
+        <div class="sensor"><span>CPU</span><b id="v-temp">—</b><i>°C</i></div>
+        <div class="sensor"><span>GPU</span><b id="v-gpu">—</b><i>°C</i></div>
+        <div class="sensor"><span>POWER</span><b id="v-power">—</b><i>W</i></div>
+        <div class="sensor"><span>LOAD</span><b id="v-load">—</b><i>%</i></div>
+      </section>
+    </main>
 
-    <p id="toast" class="toast" role="status" aria-live="polite"></p>
-  </main>
+    <footer>
+      <span>protocol 1a86:5722</span>
+      <span><span id="ver">v—</span> · <a href="/debug.html">протокол</a></span>
+    </footer>
+  </div>
 
   <div id="settingsModal" class="modal" hidden>
     <div class="modal-card">
-      <div class="modal-head"><h2>Настройки</h2><button id="closeSettings" class="plain-icon" type="button" aria-label="Закрыть">✕</button></div>
+      <div class="modal-head">
+        <h2>Настройки</h2>
+        <button id="closeSettings" class="plain-icon" type="button" aria-label="Закрыть">✕</button>
+      </div>
 
-      <div class="field">
-        <span class="label">Адрес сервера</span>
-        <input id="setServer" type="url" placeholder="http://192.168.31.100:8090" autocomplete="off">
-      </div>
-      <div class="field">
-        <span class="label">Код привязки</span>
-        <input id="setCode" type="number" inputmode="numeric" placeholder="4 цифры с компьютера" autocomplete="off">
-        <span class="hint">На компьютере: jkmctl pair</span>
-      </div>
+      <label class="field">
+        <span>Адрес сервера</span>
+        <input id="setServer" type="url" placeholder="http://ваш-компьютер:8090" autocomplete="off">
+      </label>
+
+      <label class="field">
+        <span>Код привязки</span>
+        <input id="setCode" type="number" inputmode="numeric" placeholder="4 цифры" autocomplete="off">
+      </label>
 
       <div class="modal-actions">
-        <button id="saveServer" class="accent" type="button">Сохранить адрес</button>
+        <button id="saveServer" class="primary" type="button">Сохранить адрес</button>
         <button id="doPair" type="button">Привязать</button>
         <button id="doReload" type="button">Обновить пульт</button>
       </div>
+      <p class="modal-note">Код печатает команда <code>jkmctl pair</code> на компьютере.</p>
     </div>
   </div>
 
-  <footer>
-    <span>protocol: 1a86:5722 · 9600 8N1</span>
-    <span><span id="ver">v—</span> · <a href="/debug.html" style="color:#5c6a8a">протокол</a></span>
-  </footer>
-
-  <script src="/app.js?v=4"></script>
+  <p id="toast" class="toast" role="status" aria-live="polite"></p>
+  <script src="/app.js?v=5"></script>
 </body>
 </html>

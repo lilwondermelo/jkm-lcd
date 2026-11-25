@@ -1,27 +1,48 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+<svg xmlns="http://www.w3.org/2000/svg" width="1024" height="1024" viewBox="0 0 1024 1024">
   <defs>
-    <linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0" stop-color="#0b1020"/>
-      <stop offset="1" stop-color="#101a30"/>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#16233c"/>
+      <stop offset="1" stop-color="#070b14"/>
     </linearGradient>
-    <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+    <linearGradient id="seg" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#6fe3ff"/>
+      <stop offset="1" stop-color="#4cc9ff"/>
+    </linearGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
       <feGaussianBlur stdDeviation="10" result="b"/>
       <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
     </filter>
   </defs>
-  <rect width="512" height="512" rx="112" fill="url(#g)"/>
-  <rect x="18" y="18" width="476" height="476" rx="96" fill="none" stroke="#22314f" stroke-width="3"/>
-  <g filter="url(#glow)" fill="#dff6ff" stroke="#4cc9ff" stroke-width="10" stroke-linejoin="round">
-    <path d="M120 150 h80 v60 h-80 z"/>
-    <path d="M120 240 h80 v90 h-80 z"/>
-    <path d="M120 370 h80 v50 h-80 z"/>
-    <path d="M230 150 h80 v60 h-80 z"/>
-    <path d="M230 240 h80 v90 h-80 z"/>
-    <path d="M230 370 h80 v50 h-80 z"/>
-    <path d="M340 150 h80 v60 h-80 z"/>
-    <path d="M340 240 h80 v90 h-80 z"/>
+
+  <rect width="1024" height="1024" rx="220" fill="url(#bg)"/>
+  <rect x="26" y="26" width="972" height="972" rx="198" fill="none" stroke="#24405f" stroke-width="10"/>
+
+  <!-- корпус экрана -->
+  <rect x="150" y="200" width="724" height="624" rx="64" fill="#0a1220" stroke="#2b4a6b" stroke-width="10"/>
+
+  <!-- верхние вкладки -->
+  <rect x="466" y="250" width="34" height="46" rx="10" fill="#2b4a6b"/>
+  <rect x="512" y="250" width="34" height="46" rx="10" fill="#6fe3ff" filter="url(#glow)"/>
+  <rect x="558" y="250" width="34" height="46" rx="10" fill="#2b4a6b"/>
+
+  <!-- цифры -->
+  <text x="512" y="480" text-anchor="middle" font-family="monospace" font-size="220"
+        font-weight="700" fill="#6fe3ff" filter="url(#glow)">58</text>
+  <text x="702" y="480" text-anchor="middle" font-family="sans-serif" font-size="78" fill="#8b98b8">°C</text>
+
+  <!-- шкала 10 сегментов -->
+  <g fill="url(#seg)" filter="url(#glow)">
+    <rect x="214" y="600" width="60" height="70" rx="10"/>
+    <rect x="292" y="600" width="60" height="70" rx="10"/>
+    <rect x="370" y="600" width="60" height="70" rx="10"/>
+    <rect x="448" y="600" width="60" height="70" rx="10"/>
+    <rect x="526" y="600" width="60" height="70" rx="10"/>
+    <rect x="604" y="600" width="60" height="70" rx="10"/>
   </g>
-  <circle cx="214" cy="430" r="10" fill="#7c5cff"/>
-  <circle cx="296" cy="430" r="10" fill="#7c5cff"/>
-  <circle cx="378" cy="430" r="10" fill="#7c5cff"/>
+  <g fill="#16223a">
+    <rect x="682" y="600" width="60" height="70" rx="10"/>
+    <rect x="760" y="600" width="60" height="70" rx="10"/>
+  </g>
+  <rect x="214" y="712" width="128" height="24" rx="8" fill="#22314f"/>
+  <rect x="682" y="712" width="128" height="24" rx="8" fill="#22314f"/>
 </svg>

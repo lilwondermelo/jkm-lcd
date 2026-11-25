@@ -28,7 +28,7 @@ git tag v3.0.0 && git push --tags
 ## Репозиторий
 
 Публичный: https://github.com/lilwondermelo/jkm-lcd
-APK в репозитории: `apk/com.arch.kuler_17.apk`, также как asset в релизе v3.0.1.
+APK в репозитории: `apk/com.arch.kuler_18.apk`, также как asset в релизе v3.0.1.
 
 ## Что нужно от владельца для AUR и npm
 
@@ -49,3 +49,10 @@ APK в репозитории: `apk/com.arch.kuler_17.apk`, также как as
 
 
 > Note: VID/PID `1a86:5722` and `9600 8N1` are for one particular display model, not universal. Check `lsusb` and your device docs. CDC-ACM just means the USB port appears as a serial (COM) port. Replace `<HOST>` and `<PORT>` with your own values.
+
+Опубликовано: https://www.npmjs.com/package/@lilwondermelo/jkm-lcd
+
+```bash
+npm i -g @lilwondermelo/jkm-lcd
+jkmctl doctor
+```

@@ -25,7 +25,7 @@ curl http://<HOST>:8090/api/status
 Apri `http://<IP-del-server>:8090`. Serve Linux, Python 3.10+ e
 `pactl`/`parec` per l'audio; RAPL richiede root.
 
-Готовый APK «Кулер»: [com.arch.kuler_17.apk](apk/com.arch.kuler_17.apk) (подпись release-ключом, `versionCode 17`).
+Готовый APK «Кулер»: [com.arch.kuler_18.apk](apk/com.arch.kuler_18.apk) (подпись release-ключом, `versionCode 18`).
 
 Релиз GitHub: https://github.com/lilwondermelo/jkm-lcd/releases/tag/v3.0.1 (APK также в ассетах).
 
