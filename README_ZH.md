@@ -15,7 +15,7 @@ Python 标准库服务器、PWA、原生 Android 应用「Cooler」以及 `jkmct
 
 ## 快速开始
 ```bash
-git clone https://github.com/GITHUB_USER/jkm-lcd.git
+git clone https://github.com/<USER>/jkm-lcd.git
 cd jkm-lcd
 sudo cp systemd/jkm-lcd.service /etc/systemd/system/
 sudo systemctl daemon-reload && sudo systemctl enable --now jkm-lcd

@@ -4,11 +4,11 @@ pkgver=3.0.0
 pkgrel=1
 pkgdesc="Пульт сегментного LCD кулера JKM: сервер, PWA и CLI"
 arch=('any')
-url="https://github.com/GITHUB_USER/jkm-lcd"
+url="https://github.com/<USER>/jkm-lcd"
 license=('custom')
 depends=('python>=3.10' 'pulseaudio' 'qrencode')
 optdepends=('nginx: публикация PWA' 'fdroidserver: сборка APK «Кулер»')
-source=("$pkgname-$pkgver.tar.gz::https://github.com/GITHUB_USER/jkm-lcd/archive/refs/tags/v$pkgver.tar.gz")
+source=("$pkgname-$pkgver.tar.gz::https://github.com/<USER>/jkm-lcd/archive/refs/tags/v$pkgver.tar.gz")
 sha256sums=('SKIP')
 
 package() {

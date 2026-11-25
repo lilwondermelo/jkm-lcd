@@ -15,7 +15,7 @@ Python 표준 라이브러리 서버, PWA, 네이티브 Android 앱 «Kuler», `
 
 ## 빠른 시작
 ```bash
-git clone https://github.com/GITHUB_USER/jkm-lcd.git
+git clone https://github.com/<USER>/jkm-lcd.git
 cd jkm-lcd
 sudo cp systemd/jkm-lcd.service /etc/systemd/system/
 sudo systemctl daemon-reload && sudo systemctl enable --now jkm-lcd

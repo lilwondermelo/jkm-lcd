@@ -16,7 +16,7 @@ Python 標準ライブラリのサーバー、PWA、Android ネイティブア�
 
 ## クイックスタート
 ```bash
-git clone https://github.com/GITHUB_USER/jkm-lcd.git
+git clone https://github.com/<USER>/jkm-lcd.git
 cd jkm-lcd
 sudo cp systemd/jkm-lcd.service /etc/systemd/system/
 sudo systemctl daemon-reload && sudo systemctl enable --now jkm-lcd

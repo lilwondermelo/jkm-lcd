@@ -16,7 +16,7 @@ servidor en Python (solo biblioteca estándar), PWA, app Android nativa «Kuler�
 
 ## Inicio rápido
 ```bash
-git clone https://github.com/GITHUB_USER/jkm-lcd.git
+git clone https://github.com/<USER>/jkm-lcd.git
 cd jkm-lcd
 sudo cp systemd/jkm-lcd.service /etc/systemd/system/
 sudo systemctl daemon-reload && sudo systemctl enable --now jkm-lcd

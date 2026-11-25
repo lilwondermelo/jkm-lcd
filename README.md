@@ -24,7 +24,7 @@ Android-приложение «Кулер» и CLI `jkmctl`.
 ## Быстрый старт
 
 ```bash
-git clone https://github.com/GITHUB_USER/jkm-lcd.git
+git clone https://github.com/<USER>/jkm-lcd.git
 cd jkm-lcd
 sudo cp systemd/jkm-lcd.service /etc/systemd/system/
 sudo systemctl daemon-reload && sudo systemctl enable --now jkm-lcd
@@ -88,7 +88,7 @@ curl http://localhost:8090/api/status
 
 Подробности: [docs/PROTOCOL.md](docs/PROTOCOL.md), [docs/CLI.md](docs/CLI.md),
 [docs/INSTALL.md](docs/INSTALL.md), [docs/RELEASE.md](docs/RELEASE.md),
-[docs/SECURITY.md](docs/SECURITY.md).
+[docs/SECURITY.md](docs/SECURITY.md), [docs/GITHUB.md](docs/GITHUB.md).
 
 ## Продакшн-готовность
 
