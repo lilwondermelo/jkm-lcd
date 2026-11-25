@@ -1,0 +1,19 @@
+[Unit]
+Description=JKM LCD control server (cooler segment display)
+After=network.target sound.target
+
+[Service]
+Type=simple
+WorkingDirectory=/usr/share/jkm-lcd
+ExecStart=/usr/bin/python3 -u /usr/share/jkm-lcd/server/main.py
+Restart=always
+RestartSec=2
+# RAPL (/sys/class/powercap/...) читается только root
+User=root
+NoNewPrivileges=true
+ProtectSystem=full
+ProtectHome=read-only
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

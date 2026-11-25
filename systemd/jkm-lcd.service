@@ -1,0 +1,14 @@
+[Unit]
+Description=JKM LCD control server (cooler segment display)
+After=multi-user.target
+
+[Service]
+Type=simple
+WorkingDirectory=/home/Arch/Projects/jkm-lcd
+ExecStart=/usr/bin/python3 -u server/main.py
+Restart=always
+RestartSec=2
+User=root
+
+[Install]
+WantedBy=multi-user.target

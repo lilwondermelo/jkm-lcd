@@ -1,0 +1,14 @@
+# Данные и секреты
+*.pyc
+__pycache__/
+fandisp/
+keystore/
+*.jks
+*.apk
+.github_token
+config.yml
+server.js
+
+# Локальные состояния
+*.log
+.DS_Store

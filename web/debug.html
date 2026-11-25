@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>JKM LCD · протокол</title>
+  <style>
+    body { background:#070910; color:#e9eefc; font-family: system-ui, sans-serif; padding:16px; max-width:720px; margin:0 auto; }
+    h1 { font-size: 18px; margin: 0 0 4px; }
+    p { color:#8b98b8; font-size: 12px; line-height:1.5; }
+    .grid { display:grid; grid-template-columns:repeat(2,1fr); gap:8px; margin:12px 0; }
+    button { background:#1a2742; color:#e9eefc; border:1px solid #22314f; border-radius:12px; padding:12px; font-size:14px; }
+    button:active { transform:scale(.98); }
+    input { background:#0e1526; color:#e9eefc; border:1px solid #22314f; border-radius:8px; padding:10px; width:100%; box-sizing:border-box; font-family:monospace; }
+    pre { background:#0e1526; border:1px solid #22314f; border-radius:8px; padding:10px; font-size:11px; white-space:pre-wrap; }
+    .seg { background:#121a2b; border:1px solid #22314f; border-radius:12px; padding:12px; margin:10px 0; }
+  </style>
+</head>
+<body>
+  <h1>Протокол JKM LCD</h1>
+  <p>Диагностика кадра: шлём произвольные байты на 3 секунды и смотрим на экран кулера.
+     Кадр по умолчанию: temp=25, load=50, flags=бит, rpm=1200, clk=3000, pwr=30, gpu=35.</p>
+
+  <div class="seg">
+    <b>Биты flags (byte 2)</b> — смотри на верхние три сегмента и нижнюю шкалу
+    <div class="grid" id="bits"></div>
+  </div>
+
+  <div class="seg">
+    <b>Пустые кадры</b> — должны ли гаситься цифры и вкладки
+    <div class="grid">
+      <button data-hex="00000000000000000000000000">13 нулей</button>
+      <button data-hex="00000000000000">7 нулей</button>
+      <button data-hex="0000400000000000000000">flags=0x00, 25°C</button>
+      <button data-hex="ff503c00000000000000">temp=0xFF</button>
+      <button data-hex="193240b004b80b1e0023000000">tempType 0 (°C)</button>
+      <button data-hex="193240b004b80b1e0023000100">tempType 1</button>
+      <button data-hex="193240b004b80b1e0023000200">tempType 2</button>
+      <button data-hex="193200b004b80b1e002300ff00">flags 0 + tempType 255</button>
+      <button data-hex="1932ffb004b80b1e002300ff00">flags 255 + tempType 255</button>
+      <button data-hex="193240b004b80b1e002300ff00">flags 64 + tempType 255</button>
+    </div>
+  </div>
+
+  <div class="seg">
+    <b>Перебор значений</b> — нажми и смотри на экран кулера. Значение, которое
+    сейчас на экране — это и есть перебираемый байт. Если загорится верхняя
+    середина (центральная вкладка), запомни число на экране.
+    <div class="grid">
+      <button id="sweepFlags">flags 0..255</button>
+      <button id="sweepB10">байт 10</button>
+      <button id="sweepB12">байт 12</button>
+      <button id="sweepTT">tempType 0..255</button>
+      <button id="sweepLen">7 и 13 байт</button>
+      <button id="alt40">0x40 ↔ 0x80</button>
+    </div>
+    <div id="sweepState" style="color:#8b98b8;font-size:12px;margin-top:8px">—</div>
+  </div>
+
+  <div class="seg">
+    <b>Свой кадр</b>
+    <p>hex, до 20 байт. Пример: 19 32 40 b0 04 b8 0b 1e 00 23 00 00 00</p>
+    <input id="hex" value="193240b004b80b1e0023000000">
+    <div class="grid">
+      <button id="sendRaw">Отправить 3 с</button>
+      <button id="sendLong">Отправить 10 с</button>
+    </div>
+  </div>
+
+  <pre id="log">—</pre>
+  <p><a href="/" style="color:#4cc9ff">← назад к пульту</a></p>
+
+  <script>
+    const log = (t) => { document.getElementById("log").textContent = t; };
+    const bits = [0x01, 0x02, 0x04, 0x08, 0x10, 0x20, 0x40, 0x80, 0xc0, 0x00];
+    const box = document.getElementById("bits");
+    for (const bit of bits) {
+      const b = document.createElement("button");
+      b.textContent = "flags 0x" + bit.toString(16).padStart(2, "0");
+      b.onclick = () => send(frameWithFlags(bit));
+      box.appendChild(b);
+    }
+    function frameWithFlags(flags) {
+      const bytes = [25, 50, flags, 0xb0, 0x04, 0xb8, 0x0b, 30, 0, 35, 0, 0, 0];
+      return bytes.map((x) => x.toString(16).padStart(2, "0")).join("");
+    }
+    async function send(hex, seconds = 3) {
+      try {
+        const r = await fetch("/api/raw", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ hex, seconds }),
+        });
+        const j = await r.json();
+        log(`hex=${hex} seconds=${seconds} → ${r.status} ${JSON.stringify(j)}`);
+      } catch (e) { log("ошибка: " + e.message); }
+    }
+    document.querySelectorAll("[data-hex]").forEach((btn) => {
+      btn.onclick = () => send(btn.getAttribute("data-hex"), 4);
+    });
+    let sweeping = false;
+    const sweepState = document.getElementById("sweepState");
+    async function raw(bytes, seconds) {
+      const hex = bytes.map((x) => (x & 0xff).toString(16).padStart(2, "0")).join("");
+      const r = await fetch("/api/raw", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ hex, seconds }),
+      });
+      return r.status;
+    }
+    function frame(over) {
+      return Object.assign([25, 50, 0x40, 0xb0, 0x04, 0xb8, 0x0b, 30, 0, 35, 0, 0, 0], over || []);
+    }
+    async function sweep(title, makeFrame) {
+      if (sweeping) return;
+      sweeping = true;
+      for (let v = 0; v < 256; v++) {
+        sweepState.textContent = `${title}: ${v}`;
+        await raw(makeFrame(v), 0.45);
+        await new Promise((res) => setTimeout(res, 420));
+      }
+      sweepState.textContent = `${title}: готово`;
+      sweeping = false;
+    }
+    document.getElementById("sweepFlags").onclick = () => sweep("flags", (v) => frame([v, 50, v]));
+    document.getElementById("sweepB10").onclick = () => sweep("byte10", (v) => frame([v, 50, 0x40, 0xb0, 0x04, 0xb8, 0x0b, 30, 0, 35, v, 0, 0]));
+    document.getElementById("sweepB12").onclick = () => sweep("byte12", (v) => frame([v, 50, 0x40, 0xb0, 0x04, 0xb8, 0x0b, 30, 0, 35, 0, 0, v]));
+    document.getElementById("sweepTT").onclick = () => sweep("tempType", (v) => frame([v, 50, 0x40, 0xb0, 0x04, 0xb8, 0x0b, 30, 0, 35, 0, v, 0]));
+    document.getElementById("sweepLen").onclick = async () => {
+      if (sweeping) return;
+      sweeping = true;
+      for (let i = 0; i < 20; i++) {
+        sweepState.textContent = "длина: " + (i % 2 ? "13 байт" : "7 байт");
+        await raw(frame([]).slice(0, i % 2 ? 13 : 7), 0.6);
+        await new Promise((res) => setTimeout(res, 600));
+      }
+      sweeping = false;
+      sweepState.textContent = "длина: готово";
+    };
+    document.getElementById("alt40").onclick = async () => {
+      if (sweeping) return;
+      sweeping = true;
+      for (let i = 0; i < 10; i++) {
+        sweepState.textContent = "режим: " + (i % 2 ? "0x40 темп" : "0x80 мощность");
+        await raw(frame([25, 50, i % 2 ? 0x40 : 0x80]), 1.6);
+        await new Promise((res) => setTimeout(res, 1600));
+      }
+      sweeping = false;
+      sweepState.textContent = "режим: готово";
+    };
+    document.getElementById("sendRaw").onclick =
+      () => send(document.getElementById("hex").value.trim(), 3);
+    document.getElementById("sendLong").onclick =
+      () => send(document.getElementById("hex").value.trim(), 10);
+  </script>
+</body>
+</html>
