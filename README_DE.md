@@ -25,6 +25,8 @@ curl http://localhost:8090/api/status
 Danach `http://<IP-des-Cube>:8090` öffnen. Linux, Python 3.10+ und
 `pactl`/`parec` für Audio nötig; RAPL braucht root.
 
+Готовый APK «Кулер»: [com.arch.kuler_16.apk](apk/com.arch.kuler_16.apk) (подпись release-ключом, `versionCode 16`).
+
 ## CLI
 `jkmctl status | mode CPU|GPU|clock|volume | anim wave|cpu|gpu|volume|eq | on | off | pair | devices | doctor`
 Konfiguration: `~/.config/jkm-lcd/config.json` (600).

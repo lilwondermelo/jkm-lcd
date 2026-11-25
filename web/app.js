@@ -145,12 +145,11 @@ function paintPreview(nowSec) {
     }
     else if (anim === "volume") load = snd.volume || 0;
     else if (anim === "eq") load = snd.level || 0;
-    else if (anim === "none" && mode !== "clock" && mode !== "sound") {
+    else if (anim === "none" && mode !== "clock") {
       load = 0;
     } else if (anim === "breathe") {
-      const on = breatheOn(nowSec, params.breathe || {});
-      load = on ? 100 : 0;
-      blackout = !on;
+      // На реальном LCD дыхание мигает только нижней шкалой.
+      load = breatheOn(nowSec, params.breathe || {}) ? 100 : 0;
     }
   } else {
     blackout = true;
@@ -188,7 +187,7 @@ function paintPreview(nowSec) {
   $("p-bar").querySelectorAll("span").forEach((seg, i) => {
     seg.classList.toggle("on", !blackout && i < lit);
   });
-  $("device").classList.toggle("dark", blackout);
+  $("device").classList.toggle("dark", screenOff);
   $("previewState").textContent = screenOff ? "экран выключен"
     : (s.connected ? "на связи" : "нет связи с кулером");
   $("previewState").classList.toggle("bad", !s.connected);
@@ -269,26 +268,45 @@ $("powerBtn").addEventListener("click", () => {
   command("/api/display", { on: next }, next ? "экран включён" : "экран выключен");
 });
 
-$("pairBtn").addEventListener("click", async () => {
-  const code = prompt("4-значный код с компьютера (jkmctl pair):", "");
-  if (!code) return;
-  try {
-    const res = await fetch("/api/pair", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ code: code.trim(), label: navigator.userAgent.slice(0, 60) }),
-    });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.error || res.status);
-    localStorage.setItem("jkm-token", data.token);
-    toast("компьютер привязан");
-    refresh();
-  } catch (e) {
-    toast(`не привязалось: ${e.message}`, true);
-  }
+const modal = $("settingsModal");
+$("settingsBtn").addEventListener("click", () => {
+  $("setServer").value = serverBase();
+  modal.hidden = false;
+});
+$("closeSettings").addEventListener("click", () => { modal.hidden = true; });
+modal.addEventListener("click", (e) => { if (e.target === modal) modal.hidden = true; });
+
+function serverBase() {
+  return location.origin.startsWith("http") ? location.origin : "http://192.168.31.100:8090";
+}
+
+$("saveServer").addEventListener("click", () => {
+  const url = $("setServer").value.trim().replace(/\/+$/, "");
+  if (!url.startsWith("http")) { toast("нужен адрес вида http://host:8090", true); return; }
+  localStorage.setItem("jkm-server", url);
+  toast("адрес сохранён");
+  hardReload();
 });
 
-$("hardReload").addEventListener("click", async () => {
+$("doPair").addEventListener("click", async () => {
+  const code = $("setCode").value.trim();
+  if (code.length !== 4) { toast("введи 4 цифры с компьютера", true); return; }
+  try {
+    const r = await fetch("/api/pair", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ code, label: "PWA" }),
+    });
+    const data = await r.json();
+    if (!r.ok) throw new Error(data.error || r.status);
+    localStorage.setItem("jkm-token", data.token);
+    toast("компьютер привязан");
+    modal.hidden = true;
+    refresh();
+  } catch (e) { toast(`не привязалось: ${e.message}`, true); }
+});
+
+async function hardReload() {
   try {
     if ("serviceWorker" in navigator) {
       const regs = await navigator.serviceWorker.getRegistrations();
@@ -300,7 +318,8 @@ $("hardReload").addEventListener("click", async () => {
     }
   } catch (e) { /* не критично */ }
   location.replace(`/?v=${Date.now()}`);
-});
+}
+$("doReload").addEventListener("click", hardReload);
 
 /* ---------- запуск ---------- */
 

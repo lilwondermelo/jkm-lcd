@@ -24,6 +24,8 @@ curl http://localhost:8090/api/status
 `http://<서버IP>:8090` 접속. Linux, Python 3.10+, 오디오 기능은
 `pactl`/`parec` 필요, RAPL은 root 권한 필요.
 
+Готовый APK «Кулер»: [com.arch.kuler_16.apk](apk/com.arch.kuler_16.apk) (подпись release-ключом, `versionCode 16`).
+
 ## CLI
 `jkmctl status | mode CPU|GPU|clock|volume | anim wave|cpu|gpu|volume|eq | on | off | pair | devices | doctor`
 설정: `~/.config/jkm-lcd/config.json` (600).

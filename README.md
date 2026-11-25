@@ -37,6 +37,8 @@ curl http://localhost:8090/api/status
 Зависимости: Linux, Python 3.10+, `pactl`/`parec` (PipeWire/PulseAudio) для
 эквалайзера и громкости; для RAPL — root. Остальное — стандартная библиотека.
 
+Готовый APK «Кулер»: [com.arch.kuler_16.apk](apk/com.arch.kuler_16.apk) (подпись release-ключом, `versionCode 16`).
+
 ## CLI
 
 ```bash

@@ -24,3 +24,25 @@ git tag v3.0.0 && git push --tags
 
 Альтернатива без токена в файле: скачать `gh` в `~/.local/bin`, сделать
 `gh auth login` и работать через `gh`.
+
+## Репозиторий
+
+Публичный: https://github.com/lilwondermelo/jkm-lcd
+APK в репозитории: `apk/com.arch.kuler_16.apk`, также как asset в релизе v3.0.1.
+
+## Что нужно от владельца для AUR и npm
+
+**AUR** (токен не нужен, нужен SSH-ключ):
+1. Создай аккаунт https://aur.archlinux.org/register (логин `lilwondermelo` или любой).
+2. Добавь публичный ключ куба в https://aur.archlinux.org/account/:
+   `cat ~/.ssh/id_ed25519.pub` — скопируй **только публичный** ключ.
+   Если ключа нет: `ssh-keygen -t ed25519` (без passphrase для автоматической загрузки).
+3. Скажи логин — я добавлю PKGBUILD в isolated AUR repo и запушу через SSH.
+
+**npm** (нужен токен):
+1. Создай аккаунт https://www.npmjs.com/signup.
+2. Создай granular token с правом **publish** на пакет `@arch-home/jkm-lcd`:
+   https://www.npmjs.com/settings/<твой-логин>/tokens/new
+3. Положи токен в `~/.config/jkm-lcd/npm_token` (600) и скажи только путь.
+   Я переменную `GITHUB_USER`/scope в `package.json` заменю на твой npm-логин
+   и сделаю `npm publish` через `NPM_CONFIG_//registry.npmjs.org/:_authToken`.

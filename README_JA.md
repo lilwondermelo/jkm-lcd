@@ -25,6 +25,8 @@ curl http://localhost:8090/api/status
 `http://<サーバーIP>:8090` を開きます。Linux、Python 3.10+、音声機能には
 `pactl`/`parec` が必要です。RAPL は root 権限が必要です。
 
+Готовый APK «Кулер»: [com.arch.kuler_16.apk](apk/com.arch.kuler_16.apk) (подпись release-ключом, `versionCode 16`).
+
 ## CLI
 `jkmctl status | mode CPU|GPU|clock|volume | anim wave|cpu|gpu|volume|eq | on | off | pair | devices | doctor`
 設定：`~/.config/jkm-lcd/config.json` (600)。

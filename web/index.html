@@ -22,8 +22,7 @@
     </div>
     <div class="header-right">
       <div id="status" class="status"><span class="dot"></span><span id="statusText">подключение…</span></div>
-      <button id="hardReload" class="link" type="button" title="Сбросить кэш и обновить">обновить</button>
-      <button id="pairBtn" class="link" type="button" title="Привязать к компьютеру по коду">привязать</button>
+      <button id="settingsBtn" class="icon-btn" type="button" title="Настройки">⚙</button>
     </div>
   </header>
 
@@ -88,14 +87,30 @@
       <div class="tile"><span class="label">CLOCK</span><b id="v-clock">—</b><span class="unit">MHz</span></div>
     </section>
 
-    <section class="panel">
-      <p class="hint">Яркость не регулируется: прошивка кулера такой команды не
-        знает. Выключение = сервер перестаёт отправлять кадры (как закрытая
-        вендорская утилита), индикация гаснет, датчики продолжают читаться.</p>
-    </section>
-
     <p id="toast" class="toast" role="status" aria-live="polite"></p>
   </main>
+
+  <div id="settingsModal" class="modal" hidden>
+    <div class="modal-card">
+      <div class="modal-head"><h2>Настройки</h2><button id="closeSettings" class="icon-btn" type="button">✕</button></div>
+
+      <div class="field">
+        <span class="label">Адрес сервера</span>
+        <input id="setServer" type="url" placeholder="http://192.168.31.100:8090" autocomplete="off">
+      </div>
+      <div class="field">
+        <span class="label">Код привязки</span>
+        <input id="setCode" type="number" inputmode="numeric" placeholder="4 цифры с компьютера" autocomplete="off">
+        <span class="hint">На компьютере: jkmctl pair</span>
+      </div>
+
+      <div class="modal-actions">
+        <button id="saveServer" class="accent" type="button">Сохранить адрес</button>
+        <button id="doPair" type="button">Привязать</button>
+        <button id="doReload" type="button">Обновить пульт</button>
+      </div>
+    </div>
+  </div>
 
   <footer>
     <span>protocol: 1a86:5722 · 9600 8N1</span>
