@@ -26,7 +26,7 @@ TXT
 
 ## GitHub / пакеты
 
-- Репозиторий: `https://github.com/<USER>/jkm-lcd`.
+- Репозиторий: `https://github.com/lilwondermelo/jkm-lcd`.
 - Токен для публикации — в `~/.config/jkm-lcd/github_token` (600); в чат и
   в репозиторий не вставлять.
 - AUR: `packaging/arch/PKGBUILD`, npm: `packaging/npm`.

@@ -7,7 +7,7 @@
 ## Из исходников
 
 ```bash
-git clone https://github.com/<USER>/jkm-lcd.git
+git clone https://github.com/lilwondermelo/jkm-lcd.git
 cd jkm-lcd
 ./bin/jkmctl config host=127.0.0.1 port=8090 show
 sudo cp systemd/jkm-lcd.service /etc/systemd/system/jkm-lcd.service

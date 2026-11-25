@@ -15,12 +15,12 @@ chmod 600 ~/.config/jkm-lcd/github_token
 4. Скажи только, что файл готов — я возьму токен из файла и сделаю:
 
 ```bash
-git remote add origin https://github.com/<USER>/jkm-lcd.git
+git remote add origin https://github.com/lilwondermelo/jkm-lcd.git
 git push -u origin HEAD
 git tag v3.0.0 && git push --tags
 ```
 
-Имя `<USER>` возьму из самого токена (`GET /user`), угадывать не буду.
+Имя `lilwondermelo` возьму из самого токена (`GET /user`), угадывать не буду.
 
 Альтернатива без токена в файле: скачать `gh` в `~/.local/bin`, сделать
 `gh auth login` и работать через `gh`.
