@@ -42,3 +42,6 @@ jkmctl require-token on && sudo systemctl restart jkm-lcd
 
 После включения `require-token` локальные запросы с 127.0.0.1 работают без
 токена; удалённые требуют заголовок `X-JKM-Token`.
+
+
+> Note: VID/PID `1a86:5722` and `9600 8N1` are for one particular display model, not universal. Check `lsusb` and your device docs. CDC-ACM just means the USB port appears as a serial (COM) port. Replace `<HOST>` and `<PORT>` with your own values.

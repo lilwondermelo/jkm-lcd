@@ -53,3 +53,8 @@ jkmctl doctor
 curl http://<host>:8090/api/status | python3 -m json.tool
 jkmctl mode CPU && jkmctl anim eq
 ```
+
+
+> Note: VID/PID `1a86:5722` and `9600 8N1` are for one particular display model, not universal. Check `lsusb` and your device docs. CDC-ACM just means the USB port appears as a serial (COM) port. Replace `<HOST>` and `<PORT>` with your own values.
+
+Если в браузере вместо иероглифов показываются квадраты — в системе не хватает шрифтов CJK (например, `noto-fonts-cjk`); на GitHub и в современном браузере с fonts они отображаются нормально.

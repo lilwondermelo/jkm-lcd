@@ -56,3 +56,6 @@ single-file bundle) с помощью `dnfile` + `dncil`.
 
 `POST /api/raw {"hex":"193240...","seconds":3}` и страница `/debug.html` –
 перебор битов flags, байтов 10/12, tempType, длин кадра 7/13.
+
+
+> Note: VID/PID `1a86:5722` and `9600 8N1` are for one particular display model, not universal. Check `lsusb` and your device docs. CDC-ACM just means the USB port appears as a serial (COM) port. Replace `<HOST>` and `<PORT>` with your own values.

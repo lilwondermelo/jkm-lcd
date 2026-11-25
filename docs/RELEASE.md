@@ -38,3 +38,6 @@ TXT
 - [ ] Юнит systemd поправлен под машину, порт не открыт наружу.
 - [ ] APK подписан постоянным ключом, `versionCode` больше предыдущего.
 - [ ] Документация обновлена (RU + 9 языков).
+
+
+> Note: VID/PID `1a86:5722` and `9600 8N1` are for one particular display model, not universal. Check `lsusb` and your device docs. CDC-ACM just means the USB port appears as a serial (COM) port. Replace `<HOST>` and `<PORT>` with your own values.

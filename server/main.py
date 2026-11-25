@@ -25,7 +25,7 @@ HOST = os.environ.get("JKM_HOST", CONF.get("host", "0.0.0.0"))
 PORT = int(os.environ.get("JKM_PORT", CONF.get("port", 8090)))
 REQUIRE_TOKEN = (os.environ.get("JKM_REQUIRE_TOKEN", "").lower() in ("1", "true", "yes")
                  or bool(CONF.get("require_token")))
-VERSION = "3.0.1"
+VERSION = "3.1"
 STATE_FILE = Path(os.environ.get("JKM_STATE_FILE", "/var/lib/jkm-lcd/state.json"))
 
 
@@ -220,7 +220,7 @@ def display_loop():
 
 
 class Handler(BaseHTTPRequestHandler):
-    server_version = "jkm-lcd/3.0.1"
+    server_version = "jkm-lcd/3.1"
 
     def log_message(self, fmt, *args):
         # quieter logs

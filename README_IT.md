@@ -20,14 +20,16 @@ git clone https://github.com/lilwondermelo/jkm-lcd.git
 cd jkm-lcd
 sudo cp systemd/jkm-lcd.service /etc/systemd/system/
 sudo systemctl daemon-reload && sudo systemctl enable --now jkm-lcd
-curl http://localhost:8090/api/status
+curl http://<HOST>:8090/api/status
 ```
 Apri `http://<IP-del-server>:8090`. Serve Linux, Python 3.10+ e
 `pactl`/`parec` per l'audio; RAPL richiede root.
 
-Готовый APK «Кулер»: [com.arch.kuler_16.apk](apk/com.arch.kuler_16.apk) (подпись release-ключом, `versionCode 16`).
+Готовый APK «Кулер»: [com.arch.kuler_17.apk](apk/com.arch.kuler_17.apk) (подпись release-ключом, `versionCode 17`).
 
 Релиз GitHub: https://github.com/lilwondermelo/jkm-lcd/releases/tag/v3.0.1 (APK также в ассетах).
+
+> Note: VID/PID `1a86:5722` and `9600 8N1` are for one particular display model, not universal. Check `lsusb` and your device docs. CDC-ACM just means the USB port appears as a serial (COM) port. Replace `<HOST>` and `<PORT>` with your own values.
 
 ## CLI
 `jkmctl status | mode CPU|GPU|clock|volume | anim wave|cpu|gpu|volume|eq | on | off | pair | devices | doctor`

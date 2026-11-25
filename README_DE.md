@@ -20,14 +20,16 @@ git clone https://github.com/lilwondermelo/jkm-lcd.git
 cd jkm-lcd
 sudo cp systemd/jkm-lcd.service /etc/systemd/system/
 sudo systemctl daemon-reload && sudo systemctl enable --now jkm-lcd
-curl http://localhost:8090/api/status
+curl http://<HOST>:8090/api/status
 ```
 Danach `http://<IP-des-Cube>:8090` öffnen. Linux, Python 3.10+ und
 `pactl`/`parec` für Audio nötig; RAPL braucht root.
 
-Готовый APK «Кулер»: [com.arch.kuler_16.apk](apk/com.arch.kuler_16.apk) (подпись release-ключом, `versionCode 16`).
+Готовый APK «Кулер»: [com.arch.kuler_17.apk](apk/com.arch.kuler_17.apk) (подпись release-ключом, `versionCode 17`).
 
 Релиз GitHub: https://github.com/lilwondermelo/jkm-lcd/releases/tag/v3.0.1 (APK также в ассетах).
+
+> Note: VID/PID `1a86:5722` and `9600 8N1` are for one particular display model, not universal. Check `lsusb` and your device docs. CDC-ACM just means the USB port appears as a serial (COM) port. Replace `<HOST>` and `<PORT>` with your own values.
 
 ## CLI
 `jkmctl status | mode CPU|GPU|clock|volume | anim wave|cpu|gpu|volume|eq | on | off | pair | devices | doctor`
@@ -36,7 +38,7 @@ Konfiguration: `~/.config/jkm-lcd/config.json` (600).
 ## Kopplung
 `jkmctl pair` auf dem Cube ausführen, 4-stelligen Code in der App eingeben.
 Tokens mit `jkmctl revoke <prefix>` widerrufen; mit `jkmctl require-token on`
-obligatorisch machen (localhost bleibt ohne Token).
+obligatorisch machen (<HOST> bleibt ohne Token).
 
 ## API
 `/api/status`, `/api/sensors`, `/api/mode`, `/api/animation`, `/api/display`,

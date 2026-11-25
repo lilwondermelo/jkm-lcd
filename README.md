@@ -28,18 +28,20 @@ git clone https://github.com/lilwondermelo/jkm-lcd.git
 cd jkm-lcd
 sudo cp systemd/jkm-lcd.service /etc/systemd/system/
 sudo systemctl daemon-reload && sudo systemctl enable --now jkm-lcd
-curl http://localhost:8090/api/status
+curl http://<HOST>:8090/api/status
 ```
 
-Открой `http://<_host_куба_в_LAN>:8090`. С телефона — тот же адрес (PWA) или
+Открой `http://<_host_сервера_в_LAN>:8090`. С телефона — тот же адрес (PWA) или
 приложение «Кулер» из «Склада».
 
 Зависимости: Linux, Python 3.10+, `pactl`/`parec` (PipeWire/PulseAudio) для
 эквалайзера и громкости; для RAPL — root. Остальное — стандартная библиотека.
 
-Готовый APK «Кулер»: [com.arch.kuler_16.apk](apk/com.arch.kuler_16.apk) (подпись release-ключом, `versionCode 16`).
+Готовый APK «Кулер»: [com.arch.kuler_17.apk](apk/com.arch.kuler_17.apk) (подпись release-ключом, `versionCode 17`).
 
 Релиз GitHub: https://github.com/lilwondermelo/jkm-lcd/releases/tag/v3.0.1 (APK также в ассетах).
+
+> VID/PID `1a86:5722` и скорость `9600 8N1` — параметры конкретной модели индикатора, а не универсальные. У другого устройства они могут отличаться: посмотрите `lsusb` и документацию производителя. CDC-ACM — просто способ, которым операционная система видит USB-порт как последовательный (COM-порт). Адрес и порт везде ниже — переменные `<HOST>` и `<PORT>`; значения по умолчанию выбираете вы сами.
 
 ## CLI
 
@@ -60,7 +62,7 @@ curl http://localhost:8090/api/status
 
 ## Сопряжение телефона
 
-1. На кубе: `jkmctl pair` — появится 4-значный код и QR-картинка (нужен `qrencode`).
+1. На сервере: `jkmctl pair` — появится 4-значный код и QR-картинка (нужен `qrencode`).
 2. В PWA/приложении: кнопка «привязать», ввести код.
 3. Телефон единожды получает device-token и затем шлёт его в заголовке
    `X-JKM-Token`. Токен можно отозвать: `jkmctl revoke <префикс>`.

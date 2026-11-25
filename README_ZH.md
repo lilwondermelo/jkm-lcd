@@ -19,7 +19,7 @@ git clone https://github.com/lilwondermelo/jkm-lcd.git
 cd jkm-lcd
 sudo cp systemd/jkm-lcd.service /etc/systemd/system/
 sudo systemctl daemon-reload && sudo systemctl enable --now jkm-lcd
-curl http://localhost:8090/api/status
+curl http://<HOST>:8090/api/status
 ```
 然后打开 `http://<主机IP>:8090`。需要 Linux、Python 3.10+，音频功能需要
 `pactl`/`parec`；RAPL 需要 root 权限。
@@ -41,3 +41,6 @@ curl http://localhost:8090/api/status
 ## 软件包
 Arch：AUR [PKGBUILD](packaging/arch/PKGBUILD)。其他发行版：[npm 包](packaging/npm)。
 仅限个人使用。
+
+
+> Note: VID/PID `1a86:5722` and `9600 8N1` are for one particular display model, not universal. Check `lsusb` and your device docs. CDC-ACM just means the USB port appears as a serial (COM) port. Replace `<HOST>` and `<PORT>` with your own values.

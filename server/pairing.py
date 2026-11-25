@@ -45,7 +45,8 @@ def _write(path: Path, data: dict) -> None:
 
 
 def load_config() -> dict:
-    conf = {"host": "0.0.0.0", "port": 8090, "require_token": False}
+    # По умолчанию удалённое управление требует сопряжения по коду.
+    conf = {"host": "0.0.0.0", "port": 8090, "require_token": True}
     conf.update(_read(CONF_FILE, {}))
     return conf
 

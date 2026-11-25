@@ -1,6 +1,6 @@
 /* Сеть — главный источник: на телефоне иначе остаётся старая оболочка
    (так и «залипали» кнопки яркости/питания из прошлой версии). */
-const CACHE = "jkm-lcd-v4";
+const CACHE = "jkm-lcd-v5";
 const SHELL = ["/", "/index.html", "/style.css", "/app.js", "/icon.svg", "/manifest.webmanifest"];
 
 self.addEventListener("install", (e) => {

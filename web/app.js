@@ -44,7 +44,9 @@ async function api(path, body) {
   try { data = await r.json(); } catch (e) { data = null; }
   if (!r.ok) {
     const msg = (data && (data.error || data.detail)) || `${path}: ${r.status}`;
-    throw new Error(msg);
+    const err = new Error(msg);
+    err.status = r.status;
+    throw err;
   }
   return data;
 }
@@ -208,6 +210,7 @@ function applyStatus(s) {
   setActive("data-mode", server.mode);
   setActive("data-anim", server.animation);
 
+  document.body.classList.remove("unpaired");
   const online = !!server.sensors.connected;
   statusEl.classList.toggle("online", online);
   statusEl.classList.toggle("offline", !online);
@@ -230,7 +233,14 @@ async function refresh() {
   } catch (e) {
     statusEl.classList.remove("online");
     statusEl.classList.add("offline");
-    statusText.textContent = "сервер недоступен";
+    if (e.status === 401) {
+      connected = false;
+      statusText.textContent = "нужна привязка";
+      document.body.classList.add("unpaired");
+      if (!modal.hidden) modal.hidden = false;
+    } else {
+      statusText.textContent = "сервер недоступен";
+    }
   }
 }
 
@@ -302,6 +312,7 @@ $("doPair").addEventListener("click", async () => {
     localStorage.setItem("jkm-token", data.token);
     toast("компьютер привязан");
     modal.hidden = true;
+    document.body.classList.remove("unpaired");
     refresh();
   } catch (e) { toast(`не привязалось: ${e.message}`, true); }
 });
