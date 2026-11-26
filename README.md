@@ -40,7 +40,7 @@ curl http://<HOST>:8090/api/status
 Зависимости: Linux, Python 3.10+, `pactl`/`parec` (PipeWire/PulseAudio) для
 эквалайзера и громкости; для RAPL — root. Остальное — стандартная библиотека.
 
-Готовый APK «Кулер»: [com.arch.kuler_21.apk](apk/com.arch.kuler_21.apk) (подпись release-ключом, `versionCode 21`).
+Готовый APK «Кулер»: [com.arch.kuler_22.apk](apk/com.arch.kuler_22.apk) (подпись release-ключом, `versionCode 22`).
 
 Релиз GitHub: https://github.com/lilwondermelo/jkm-lcd/releases/tag/v3.2.0 (APK также в ассетах).
 

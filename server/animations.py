@@ -226,7 +226,9 @@ def render(mode: str, animation: str, t: float, s: dict) -> dict:
     # ttype != 0 зажигает центральную вкладку. Часы/звук — центр,
     # температура — тоже центр (по просьбе владельца), за исключением
     # часов: там вкладка показывает ЧЧ или ММ через flags.
-    ttype = 1 if mode in ("temp", "gpu", "volume") else 0
+    # Центр-вкладка (tempType != 0) временно отключена: есть подозрение,
+    # что прошивка гаснет от ненулевого tempType. Вернём после теста.
+    ttype = 0
     return {
         "temp": 0 if blackout else temp_field,
         "pwr": 0 if blackout else pwr_field,

@@ -9,6 +9,7 @@
   jkmctl require-token on|off
   jkmctl config [host=…] [port=…] [token=…] [show]
   jkmctl doctor
+  jkmctl test          — 10 секунд тестового кадра (42 °C, шкала 50 %)
 """
 from __future__ import annotations
 
@@ -143,6 +144,9 @@ def main() -> int:
         print("перезапустите службу: sudo systemctl restart jkm-lcd")
     elif cmd == "doctor":
         doctor()
+    elif cmd == "test":
+        show(request("/api/raw", {"hex": "2a3240b004b80b1e0023000000", "seconds": 10}))
+        print("10 секунд идёт тестовый кадр: цифры 42, шкала 50 %, без вкладки. Смотри на экран.")
     else:
         print("неизвестная команда:", cmd, file=sys.stderr)
         return 2

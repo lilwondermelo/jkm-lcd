@@ -155,7 +155,7 @@ function paintPreview(nowSec) {
 
   let value = s.temp;
   let unit = "°C";
-  let tab = "center";
+  let tab = "right";
   if (mode === "gpu") { value = s.gpu; }
   if (mode === "clock") {
     const d = new Date();

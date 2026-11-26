@@ -27,7 +27,7 @@ curl http://<HOST>:8090/api/status
 `http://<서버IP>:8090` 접속. Linux, Python 3.10+, 오디오 기능은
 `pactl`/`parec` 필요, RAPL은 root 권한 필요.
 
-Готовый APK «Кулер»: [com.arch.kuler_21.apk](apk/com.arch.kuler_21.apk) (подпись release-ключом, `versionCode 21`).
+Готовый APK «Кулер»: [com.arch.kuler_22.apk](apk/com.arch.kuler_22.apk) (подпись release-ключом, `versionCode 22`).
 
 Релиз GitHub: https://github.com/lilwondermelo/jkm-lcd/releases/tag/v3.2.0 (APK также в ассетах).
 
