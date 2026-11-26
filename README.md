@@ -1,5 +1,8 @@
 # JKM LCD — пульт экрана кулера
 
+![Пульт](docs/screenshot.png)
+
+
 [English](README_EN.md) · [Deutsch](README_DE.md) · [Español](README_ES.md) · [Français](README_FR.md) · [中文](README_ZH.md) · [日本語](README_JA.md) · [한국어](README_KO.md) · [Português](README_PT.md) · [Italiano](README_IT.md)
 
 Лёгкий пульт для сегментного LCD кулера JKM (USB `1a86:5722`, CDC-ACM, 9600 8N1):
@@ -37,7 +40,7 @@ curl http://<HOST>:8090/api/status
 Зависимости: Linux, Python 3.10+, `pactl`/`parec` (PipeWire/PulseAudio) для
 эквалайзера и громкости; для RAPL — root. Остальное — стандартная библиотека.
 
-Готовый APK «Кулер»: [com.arch.kuler_19.apk](apk/com.arch.kuler_19.apk) (подпись release-ключом, `versionCode 19`).
+Готовый APK «Кулер»: [com.arch.kuler_20.apk](apk/com.arch.kuler_20.apk) (подпись release-ключом, `versionCode 20`).
 
 Релиз GitHub: https://github.com/lilwondermelo/jkm-lcd/releases/tag/v3.0.1 (APK также в ассетах).
 
@@ -109,4 +112,4 @@ curl http://<HOST>:8090/api/status
 - Arch (AUR): [packaging/arch/PKGBUILD](packaging/arch/PKGBUILD).
 - Остальные дистрибутивы: npm-пакет **[@lilwondermelo/jkm-lcd](https://www.npmjs.com/package/@lilwondermelo/jkm-lcd)** (`npm i -g @lilwondermelo/jkm-lcd`).
 
-Лицензия: личное использование в домашней сети.
+Лицензия: MIT. Проект не связан с производителем кулера.

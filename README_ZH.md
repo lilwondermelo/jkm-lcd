@@ -1,5 +1,8 @@
 # JKM LCD — 风扇屏幕遥控器
 
+![Пульт](docs/screenshot.png)
+
+
 [Русский](README.md) · [English](README_EN.md) · [Deutsch](README_DE.md) · [Español](README_ES.md) · [Français](README_FR.md) · 日本語 · 한국어 · Português · Italiano
 
 用于 JKM 段码屏（USB 1a86:5722，CDC-ACM，9600 8N1）的轻量遥控器：
@@ -40,7 +43,7 @@ curl http://<HOST>:8090/api/status
 
 ## 软件包
 Arch：AUR [PKGBUILD](packaging/arch/PKGBUILD)。其他发行版：[npm 包](packaging/npm)。
-仅限个人使用。
+MIT 许可证。与散热器厂商无关。
 
 
 > Note: VID/PID `1a86:5722` and `9600 8N1` are for one particular display model, not universal. Check `lsusb` and your device docs. CDC-ACM just means the USB port appears as a serial (COM) port. Replace `<HOST>` and `<PORT>` with your own values.

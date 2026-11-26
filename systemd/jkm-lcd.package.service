@@ -10,6 +10,8 @@ Restart=always
 RestartSec=2
 # RAPL (/sys/class/powercap/...) читается только root
 User=root
+StateDirectory=jkm-lcd
+Environment=JKM_HOME=/var/lib/jkm-lcd
 NoNewPrivileges=true
 ProtectSystem=full
 ProtectHome=read-only

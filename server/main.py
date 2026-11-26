@@ -38,7 +38,7 @@ HOST = os.environ.get("JKM_HOST", CONF.get("host", "0.0.0.0"))
 PORT = int(os.environ.get("JKM_PORT", CONF.get("port", 8090)))
 REQUIRE_TOKEN = (os.environ.get("JKM_REQUIRE_TOKEN", "").lower() in ("1", "true", "yes")
                  or bool(CONF.get("require_token")))
-VERSION = "3.1"
+VERSION = "3.2"
 STATE_FILE = Path(os.environ.get("JKM_STATE_FILE", "/var/lib/jkm-lcd/state.json"))
 
 
@@ -233,7 +233,7 @@ def display_loop():
 
 
 class Handler(BaseHTTPRequestHandler):
-    server_version = "jkm-lcd/3.1"
+    server_version = "jkm-lcd/3.2"
 
     def log_message(self, fmt, *args):
         # quieter logs
@@ -264,6 +264,9 @@ class Handler(BaseHTTPRequestHandler):
         self.send_header("Access-Control-Allow-Headers", "Content-Type")
         self.end_headers()
 
+    def _is_local(self) -> bool:
+        return self.client_address[0] in ("127.0.0.1", "::1")
+
     def _authorized(self) -> bool:
         if not REQUIRE_TOKEN:
             return True
@@ -284,11 +287,15 @@ class Handler(BaseHTTPRequestHandler):
                 "/api/pair/code", "/api/pair/devices") and not self._authorized():
             return self._json(401, {"error": "not paired"})
         if path == "/api/pair/code":
+            if not self._is_local():
+                return self._json(403, {"error": "code is shown on the computer only"})
             info = pairing.new_code()
             host = os.environ.get("JKM_PUBLIC_HOST") or f"{lan_ip()}:{PORT}"
             info["url"] = f"http://{host}/pair?code={info['code']}"
             return self._json(200, info)
         if path == "/api/pair/devices":
+            if not self._is_local():
+                return self._json(403, {"error": "local only"})
             return self._json(200, {"items": pairing.devices()})
         if path == "/api/status":
             with STATE.lock:
@@ -370,6 +377,8 @@ class Handler(BaseHTTPRequestHandler):
                 _save_current()
             return self._json(200, {"ok": True, "display_on": on})
         if path == "/api/raw":
+            if not self._is_local():
+                return self._json(403, {"error": "local only"})
             hexstr = str(data.get("hex", "")).replace(" ", "").replace(",", "")
             try:
                 payload = bytes.fromhex(hexstr)

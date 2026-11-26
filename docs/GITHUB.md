@@ -28,7 +28,7 @@ git tag v3.0.0 && git push --tags
 ## Репозиторий
 
 Публичный: https://github.com/lilwondermelo/jkm-lcd
-APK в репозитории: `apk/com.arch.kuler_19.apk`, также как asset в релизе v3.0.1.
+APK в репозитории: `apk/com.arch.kuler_20.apk`, также как asset в релизе v3.0.1.
 
 ## Что нужно от владельца для AUR и npm
 

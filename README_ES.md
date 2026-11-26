@@ -1,5 +1,8 @@
 # JKM LCD — control remoto de la pantalla
 
+![Пульт](docs/screenshot.png)
+
+
 [Русский](README.md) · [English](README_EN.md) · [Deutsch](README_DE.md) · Français · 中文 · 日本語 · 한국어 · Português · Italiano
 
 Pequeño control para la pantalla LCD de segmentos JKM (USB 1a86:5722, CDC-ACM, 9600 8N1):
@@ -25,7 +28,7 @@ curl http://<HOST>:8090/api/status
 Abre `http://<IP-del-cube>:8090`. Requiere Linux, Python 3.10+ y
 `pactl`/`parec` para audio; RAPL necesita root.
 
-Готовый APK «Кулер»: [com.arch.kuler_19.apk](apk/com.arch.kuler_19.apk) (подпись release-ключом, `versionCode 19`).
+Готовый APK «Кулер»: [com.arch.kuler_20.apk](apk/com.arch.kuler_20.apk) (подпись release-ключом, `versionCode 20`).
 
 Релиз GitHub: https://github.com/lilwondermelo/jkm-lcd/releases/tag/v3.0.1 (APK также в ассетах).
 
@@ -46,4 +49,4 @@ Docs: [docs/PROTOCOL.md](docs/PROTOCOL.md), [docs/CLI.md](docs/CLI.md).
 
 ## Paquetes
 Arch: AUR [PKGBUILD](packaging/arch/PKGBUILD). Otras distros: [paquete npm](packaging/npm).
-Uso personal.
+Licencia MIT. Sin relación con el fabricante.

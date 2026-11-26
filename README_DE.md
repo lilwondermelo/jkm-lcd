@@ -1,5 +1,8 @@
 # JKM LCD — Fernbedienung für das Kühler-Display
 
+![Пульт](docs/screenshot.png)
+
+
 [Русский](README.md) · [English](README_EN.md) · Español · Français · 中文 · 日本語 · 한국어 · Português · Italiano
 
 Kleine Steuerung für das JKM-Segment-LCD (USB 1a86:5722, CDC-ACM, 9600 8N1):
@@ -25,7 +28,7 @@ curl http://<HOST>:8090/api/status
 Danach `http://<IP-des-Cube>:8090` öffnen. Linux, Python 3.10+ und
 `pactl`/`parec` für Audio nötig; RAPL braucht root.
 
-Готовый APK «Кулер»: [com.arch.kuler_19.apk](apk/com.arch.kuler_19.apk) (подпись release-ключом, `versionCode 19`).
+Готовый APK «Кулер»: [com.arch.kuler_20.apk](apk/com.arch.kuler_20.apk) (подпись release-ключом, `versionCode 20`).
 
 Релиз GitHub: https://github.com/lilwondermelo/jkm-lcd/releases/tag/v3.0.1 (APK также в ассетах).
 
@@ -47,4 +50,4 @@ Dokumentation: [docs/PROTOCOL.md](docs/PROTOCOL.md), [docs/CLI.md](docs/CLI.md).
 
 ## Pakete
 Arch: AUR [PKGBUILD](packaging/arch/PKGBUILD). Andere Distributionen: [npm-Paket](packaging/npm).
-Nur für den privaten Gebrauch.
+MIT-Lizenz. Keine Verbindung zum Hersteller.

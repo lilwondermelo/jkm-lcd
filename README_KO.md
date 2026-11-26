@@ -1,5 +1,8 @@
 # JKM LCD — CPU 쿨러 디스플레이 리모컨
 
+![Пульт](docs/screenshot.png)
+
+
 [Русский](README.md) · [English](README_EN.md) · [Deutsch](README_DE.md) · [Español](README_ES.md) · [Français](README_FR.md) · [中文](README_ZH.md) · [日本語](README_JA.md) · Português · Italiano
 
 JKM 세그먼트 LCD(USB 1a86:5722, CDC-ACM, 9600 8N1)용 경량 리모컨입니다.
@@ -24,7 +27,7 @@ curl http://<HOST>:8090/api/status
 `http://<서버IP>:8090` 접속. Linux, Python 3.10+, 오디오 기능은
 `pactl`/`parec` 필요, RAPL은 root 권한 필요.
 
-Готовый APK «Кулер»: [com.arch.kuler_19.apk](apk/com.arch.kuler_19.apk) (подпись release-ключом, `versionCode 19`).
+Готовый APK «Кулер»: [com.arch.kuler_20.apk](apk/com.arch.kuler_20.apk) (подпись release-ключом, `versionCode 20`).
 
 Релиз GitHub: https://github.com/lilwondermelo/jkm-lcd/releases/tag/v3.0.1 (APK также в ассетах).
 
@@ -46,4 +49,4 @@ curl http://<HOST>:8090/api/status
 
 ## 패키지
 Arch: AUR [PKGBUILD](packaging/arch/PKGBUILD). 기타 배포판: [npm 패키지](packaging/npm).
-개인 사용용.
+MIT 라이선스. 쿨러 제조사와 무관합니다.

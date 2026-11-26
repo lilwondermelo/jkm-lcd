@@ -69,6 +69,8 @@ def new_code() -> dict:
     code = f"{secrets.randbelow(10000):04d}"
     data["code"] = code
     data["expires"] = time.time() + CODE_TTL
+    data["fails"] = 0
+    data["fail_until"] = 0
     data.setdefault("devices", [])
     _write(STATE_FILE, data)
     return {"code": code, "expires_in": CODE_TTL}
@@ -76,11 +78,20 @@ def new_code() -> dict:
 
 def redeem(code: str, label: str = "") -> dict:
     data = _read(STATE_FILE, {"code": None, "expires": 0, "devices": []})
+    now = time.time()
+    if now < data.get("fail_until", 0):
+        raise ValueError("слишком много попыток, попробуйте позже")
     if not data.get("code") or str(code).strip() != data["code"]:
+        data["fails"] = int(data.get("fails", 0)) + 1
+        if data["fails"] >= 5:
+            data["fail_until"] = now + 300
+            data["code"] = None
+        _write(STATE_FILE, data)
         raise ValueError("неверный код")
     if time.time() > data.get("expires", 0):
         raise ValueError("код устарел — запроси новый")
     token = secrets.token_hex(24)
+    data["fails"] = 0
     devices = data.setdefault("devices", [])
     devices.append({"token": token, "label": label[:60], "paired_at": time.time()})
     data["code"] = None

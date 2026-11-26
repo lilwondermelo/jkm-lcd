@@ -23,7 +23,7 @@
         </svg>
       </div>
       <h1>Подключение к компьютеру</h1>
-      <p class="login-sub">Отсканируйте QR-код, который показывает команда <code>jkmctl pair</code> на компьютере. Адрес и код привязки уже внутри.</p>
+      <p class="login-sub">Отсканируйте QR-код, который показывает команда <code>jkmctl pair</code> на компьютере. Адрес и код уже внутри. Если браузер не даёт камеру (http, не https) — наведите камеру телефона на QR, ссылка привяжет автоматически.</p>
       <button id="scanBtn" class="primary wide" type="button">Сканировать QR-код</button>
       <p id="scanHint" class="hint"></p>
       <video id="scanVideo" class="scan-video" playsinline muted hidden></video>
@@ -134,7 +134,7 @@
 
       <label class="field">
         <span>Адрес сервера</span>
-        <input id="setServer" type="url" placeholder="http://ваш-компьютер:8090" autocomplete="off">
+        <input id="setServer" type="text" readonly>
       </label>
 
       <div class="modal-actions">

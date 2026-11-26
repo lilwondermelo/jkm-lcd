@@ -1,5 +1,8 @@
 # JKM LCD — telecomando del display del dissipatore
 
+![Пульт](docs/screenshot.png)
+
+
 [Русский](README.md) · [English](README_EN.md) · [Deutsch](README_DE.md) · [Español](README_ES.md) · [Français](README_FR.md) · [中文](README_ZH.md) · [日本語](README_JA.md) · [한국어](README_KO.md) · [Português](README_PT.md)
 
 Telecomando leggero per il display a segmenti JKM (USB 1a86:5722, CDC-ACM, 9600 8N1):
@@ -25,7 +28,7 @@ curl http://<HOST>:8090/api/status
 Apri `http://<IP-del-server>:8090`. Serve Linux, Python 3.10+ e
 `pactl`/`parec` per l'audio; RAPL richiede root.
 
-Готовый APK «Кулер»: [com.arch.kuler_19.apk](apk/com.arch.kuler_19.apk) (подпись release-ключом, `versionCode 19`).
+Готовый APK «Кулер»: [com.arch.kuler_20.apk](apk/com.arch.kuler_20.apk) (подпись release-ключом, `versionCode 20`).
 
 Релиз GitHub: https://github.com/lilwondermelo/jkm-lcd/releases/tag/v3.0.1 (APK также в ассетах).
 

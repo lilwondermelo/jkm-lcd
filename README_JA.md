@@ -1,5 +1,8 @@
 # JKM LCD — 冷却器液晶画面的遥控器
 
+![Пульт](docs/screenshot.png)
+
+
 [Русский](README.md) · [English](README_EN.md) · [Deutsch](README_DE.md) · [Español](README_ES.md) · [Français](README_FR.md) · [中文](README_ZH.md) · 한국어 · Português · Italiano
 
 JKM セグメント LCD（USB 1a86:5722、CDC-ACM、9600 8N1）用の軽量遥控器です。
@@ -25,7 +28,7 @@ curl http://<HOST>:8090/api/status
 `http://<サーバーIP>:8090` を開きます。Linux、Python 3.10+、音声機能には
 `pactl`/`parec` が必要です。RAPL は root 権限が必要です。
 
-Готовый APK «Кулер»: [com.arch.kuler_19.apk](apk/com.arch.kuler_19.apk) (подпись release-ключом, `versionCode 19`).
+Готовый APK «Кулер»: [com.arch.kuler_20.apk](apk/com.arch.kuler_20.apk) (подпись release-ключом, `versionCode 20`).
 
 Релиз GitHub: https://github.com/lilwondermelo/jkm-lcd/releases/tag/v3.0.1 (APK также в ассетах).
 
@@ -47,4 +50,4 @@ curl http://<HOST>:8090/api/status
 
 ## パッケージ
 Arch：AUR [PKGBUILD](packaging/arch/PKGBUILD)。その他：[npm パッケージ](packaging/npm)。
-個人利用向け。
+MIT ライセンス。冷却器メーカーとは無関係です。

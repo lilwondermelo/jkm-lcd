@@ -1,5 +1,8 @@
 # JKM LCD — cooler display remote
 
+![Пульт](docs/screenshot.png)
+
+
 [Русский](README.md) · Deutsch · Español · Français · 中文 · 日本語 · 한국어 · Português · Italiano
 
 A small remote for the JKM segment LCD (USB 1a86:5722, CDC-ACM, 9600 8N1):
@@ -25,7 +28,7 @@ curl http://<HOST>:8090/api/status
 Open `http://<cube-LAN-IP>:8090`. Needs Linux, Python 3.10+, and
 `pactl`/`parec` for audio features. RAPL sensors require root.
 
-Готовый APK «Кулер»: [com.arch.kuler_19.apk](apk/com.arch.kuler_19.apk) (подпись release-ключом, `versionCode 19`).
+Готовый APK «Кулер»: [com.arch.kuler_20.apk](apk/com.arch.kuler_20.apk) (подпись release-ключом, `versionCode 20`).
 
 Релиз GitHub: https://github.com/lilwondermelo/jkm-lcd/releases/tag/v3.0.1 (APK также в ассетах).
 
@@ -48,4 +51,4 @@ with `jkmctl require-token on`; <HOST> requests stay token-free.
 
 ## Packaging
 Arch: AUR [PKGBUILD](packaging/arch/PKGBUILD). Other distros: [npm package](packaging/npm).
-Personal/home use license.
+MIT license. Not affiliated with the cooler vendor.
