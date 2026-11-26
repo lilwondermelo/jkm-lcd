@@ -47,7 +47,7 @@ with `jkmctl require-token on`; <HOST> requests stay token-free.
 `/api/status`, `/api/sensors`, `/api/mode`, `/api/animation`, `/api/display`,
 `/api/pair/code`, `/api/pair`, `/api/pair/devices`, `/api/pair/revoke`,
 `/api/raw` (frame diagnostics). Full docs: [docs/PROTOCOL.md](docs/PROTOCOL.md),
-[docs/CLI.md](docs/CLI.md), [docs/INSTALL.md](docs/INSTALL.md).
+[docs/CLI.md](docs/CLI.md), [docs/INSTALL.md](docs/INSTALL.md), [docs/DEVICES.md](docs/DEVICES.md).
 
 ## Packaging
 Arch: AUR [PKGBUILD](packaging/arch/PKGBUILD). Other distros: [npm package](packaging/npm).

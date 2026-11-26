@@ -93,6 +93,9 @@ def doctor() -> None:
         print("звук:", s.get("sound"))
     except SystemExit as e:
         print("сервер недоступен:", e)
+    print("устройство: VID=%s PID=%s BAUD=%s TTY=%s" % (
+        os.environ.get("JKM_VID", "1a86"), os.environ.get("JKM_PID", "5722"),
+        os.environ.get("JKM_BAUD", "9600"), os.environ.get("JKM_TTY", "авто")))
     print("конфиг:", CONF, "есть" if CONF.exists() else "нет")
 
 

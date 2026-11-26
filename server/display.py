@@ -9,15 +9,22 @@ import struct
 import termios
 import time
 
-VID, PID = "1a86", "5722"
-BAUD = termios.B9600
+# Параметры конкретного индикатора. Для другой модели задайте окружение:
+#   JKM_VID=1a86 JKM_PID=5722 JKM_BAUD=9600 JKM_TTY=/dev/ttyACM0
+VID = os.environ.get("JKM_VID", "1a86").lower()
+PID = os.environ.get("JKM_PID", "5722").lower()
+BAUD_RATE = int(os.environ.get("JKM_BAUD", "9600"))
+BAUD = getattr(termios, f"B{BAUD_RATE}", termios.B9600)
+TTY = os.environ.get("JKM_TTY", "")
 # The firmware treats a zero RPM field as "no data" and blanks the screen.
 # This cooler has no tach line, so a placeholder is required.
 RPM_PLACEHOLDER = 1200
 
 
 def find_port():
-    for p in glob.glob("/dev/ttyACM*"):
+    if TTY:
+        return TTY if os.path.exists(TTY) else None
+    for p in glob.glob("/dev/ttyACM*") + glob.glob("/dev/ttyUSB*"):
         name = os.path.basename(p)
         d = os.path.realpath(f"/sys/class/tty/{name}/device")
         for _ in range(8):
@@ -25,7 +32,8 @@ def find_port():
             pf = os.path.join(d, "idProduct")
             if os.path.exists(vf) and os.path.exists(pf):
                 try:
-                    if open(vf).read().strip() == VID and open(pf).read().strip() == PID:
+                    if (open(vf).read().strip().lower() == VID
+                            and open(pf).read().strip().lower() == PID):
                         return p
                 except OSError:
                     pass

@@ -96,7 +96,7 @@ curl http://<HOST>:8090/api/status
 «обратный ход» реализован как гашение справа налево (пинг-понг).
 
 Подробности: [docs/PROTOCOL.md](docs/PROTOCOL.md), [docs/CLI.md](docs/CLI.md),
-[docs/INSTALL.md](docs/INSTALL.md), [docs/RELEASE.md](docs/RELEASE.md),
+[docs/INSTALL.md](docs/INSTALL.md), [docs/DEVICES.md](docs/DEVICES.md), [docs/RELEASE.md](docs/RELEASE.md),
 [docs/SECURITY.md](docs/SECURITY.md), [docs/GITHUB.md](docs/GITHUB.md).
 
 ## Продакшн-готовность
