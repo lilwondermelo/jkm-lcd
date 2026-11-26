@@ -1,0 +1,5 @@
+# Стабильное имя и права для экрана кулера JKM (1a86:5722).
+# Установить: sudo cp packaging/udev/90-jkm-lcd.rules /etc/udev/rules.d/
+#             sudo udevadm control --reload-rules && sudo udevadm trigger
+SUBSYSTEM=="tty", ATTRS{idVendor}=="1a86", ATTRS{idProduct}=="5722", \
+  SYMLINK+="jkm-lcd", GROUP="dialout", MODE="0660"
