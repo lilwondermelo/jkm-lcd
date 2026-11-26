@@ -38,7 +38,7 @@ HOST = os.environ.get("JKM_HOST", CONF.get("host", "0.0.0.0"))
 PORT = int(os.environ.get("JKM_PORT", CONF.get("port", 8090)))
 REQUIRE_TOKEN = (os.environ.get("JKM_REQUIRE_TOKEN", "").lower() in ("1", "true", "yes")
                  or bool(CONF.get("require_token")))
-VERSION = "3.2"
+VERSION = "3.2.1"
 STATE_FILE = Path(os.environ.get("JKM_STATE_FILE", "/var/lib/jkm-lcd/state.json"))
 
 
@@ -100,7 +100,12 @@ def display_loop():
     sens = sensors.Sensors()
     level = sound.Level()
     level.start()
-    state = {"last_poll": 0.0, "last_volume": None}
+    state = {
+        "last_poll": 0.0,
+        "last_volume": None,
+        "last_health": 0.0,
+        "health_every": float(os.environ.get("JKM_HEALTH_SECONDS", "30")),
+    }
 
     def step():
         with STATE.lock:
@@ -141,6 +146,17 @@ def display_loop():
                 with STATE.lock:
                     STATE.latest = {**STATE.latest, "connected": False}
                 time.sleep(1)
+                return
+
+        # После переподключения USB прошивка может перестать принимать кадры,
+        # хотя запись в старый fd не даёт ошибки. Периодический handshake
+        # ловит это и заставляет переподключиться.
+        now_h = time.time()
+        if state["health_every"] > 0 and now_h - state["last_health"] > state["health_every"]:
+            state["last_health"] = now_h
+            if not disp.handshake():
+                disp.close()
+                time.sleep(0.3)
                 return
 
         # Диагностика: временно шлём произвольные байты (см. /api/raw).
@@ -233,7 +249,7 @@ def display_loop():
 
 
 class Handler(BaseHTTPRequestHandler):
-    server_version = "jkm-lcd/3.2"
+    server_version = "jkm-lcd/3.2.1"
 
     def log_message(self, fmt, *args):
         # quieter logs
