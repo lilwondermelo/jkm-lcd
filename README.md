@@ -40,9 +40,9 @@ curl http://<HOST>:8090/api/status
 Зависимости: Linux, Python 3.10+, `pactl`/`parec` (PipeWire/PulseAudio) для
 эквалайзера и громкости; для RAPL — root. Остальное — стандартная библиотека.
 
-Готовый APK «Кулер»: [com.arch.kuler_20.apk](apk/com.arch.kuler_20.apk) (подпись release-ключом, `versionCode 20`).
+Готовый APK «Кулер»: [com.arch.kuler_21.apk](apk/com.arch.kuler_21.apk) (подпись release-ключом, `versionCode 21`).
 
-Релиз GitHub: https://github.com/lilwondermelo/jkm-lcd/releases/tag/v3.0.1 (APK также в ассетах).
+Релиз GitHub: https://github.com/lilwondermelo/jkm-lcd/releases/tag/v3.2.0 (APK также в ассетах).
 
 > VID/PID `1a86:5722` и скорость `9600 8N1` — параметры конкретной модели индикатора, а не универсальные. У другого устройства они могут отличаться: посмотрите `lsusb` и документацию производителя. CDC-ACM — просто способ, которым операционная система видит USB-порт как последовательный (COM-порт). Адрес и порт везде ниже — переменные `<HOST>` и `<PORT>`; значения по умолчанию выбираете вы сами.
 

@@ -28,9 +28,9 @@ curl http://<HOST>:8090/api/status
 Abra `http://<IP-do-servidor>:8090`. Requer Linux, Python 3.10+ e
 `pactl`/`parec` para áudio; RAPL requer root.
 
-Готовый APK «Кулер»: [com.arch.kuler_20.apk](apk/com.arch.kuler_20.apk) (подпись release-ключом, `versionCode 20`).
+Готовый APK «Кулер»: [com.arch.kuler_21.apk](apk/com.arch.kuler_21.apk) (подпись release-ключом, `versionCode 21`).
 
-Релиз GitHub: https://github.com/lilwondermelo/jkm-lcd/releases/tag/v3.0.1 (APK также в ассетах).
+Релиз GitHub: https://github.com/lilwondermelo/jkm-lcd/releases/tag/v3.2.0 (APK также в ассетах).
 
 > Note: VID/PID `1a86:5722` and `9600 8N1` are for one particular display model, not universal. Check `lsusb` and your device docs. CDC-ACM just means the USB port appears as a serial (COM) port. Replace `<HOST>` and `<PORT>` with your own values.
 
